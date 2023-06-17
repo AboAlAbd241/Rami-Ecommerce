@@ -1,9 +1,10 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
 export const environment = {
 	production: false,
+	appUrl: 'http://localhost:8080',
+	authUrl:'http://localhost:8080',
 	firebase: {
 		apiKey: "AIzaSyAWIUjgtFYTu7gnOQcHddfXhoA0Te6sAHA",
 		authDomain: "embryo-angular.firebaseapp.com",
