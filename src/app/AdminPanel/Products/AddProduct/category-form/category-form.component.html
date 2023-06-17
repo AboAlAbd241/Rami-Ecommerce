@@ -1,0 +1,39 @@
+
+<div class="form-row ">
+
+    <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+    <h4 for="englishName">{{selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}} Name in English :</h4>
+    <input type="text" class="form-control" id="englishName" [(ngModel)]="categoryForm.englishName" placeholder="ex: Computers">
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+      <h4 for="arabicName">{{selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}} Name in Arabic :</h4>
+      <input type="text" class="form-control" id="arabicName" [(ngModel)]="categoryForm.arabicName" placeholder="ex: كمبيوتر">
+    </div>
+    <div class="spinner-container" *ngIf="loading">
+      <mat-spinner class="custom-spinner"></mat-spinner>
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+        <div class="form-group d-flex flex-column" style="justify-content: center; align-items: center;">
+            <div [innerHtml]='msg' *ngIf="msg" ></div>
+            <div><img [src]="url" *ngIf="url" class="img-fluid" style="width: 300px;"></div>
+            <label class="image-upload-container btn btn-bwm">
+                <span>Select Image</span>
+                <input type="file" accept="image/*" (change)="selectFile($event)">
+            </label>
+
+        </div>
+        <div *ngIf="categoryForm.selectedImage?.name == ''">
+          <p class="text-danger">Please select at least one image.</p>
+        </div>
+    </div>
+
+    <div class="col-12" style="margin-top: 50px;">
+        <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-md btn-block" style="width: 300px;">Add</button>
+        </div>
+    </div>
+
+  </div>
+

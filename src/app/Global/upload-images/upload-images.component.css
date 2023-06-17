@@ -1,0 +1,70 @@
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .drop-zone p {
+    margin: 0;
+  }
+  .image-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .image-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .image {
+    margin-right: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .image img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  .image p {
+    margin: 0;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+  }
+  .image {
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .image {
+    position: relative;
+  }
+  
+  .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    color: #494545;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  

@@ -1,0 +1,222 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+    <div class="row ">
+  
+      <app-upload-images  #uploadImage (imagesEvent)="receiveImages($event)"></app-upload-images>
+  
+    </div>
+
+    <div class="spinner-container" *ngIf="loading">
+        <mat-spinner class="custom-spinner"></mat-spinner>
+      </div>
+  
+    <div class="row ">
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Product Name</mat-label>
+                <input   matInput placeholder="Ex. Computers"  formControlName="productName">
+              </mat-form-field>
+        </div>
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Short Description</mat-label>
+                <input matInput placeholder="Dell Core I9 ,1T SSD"  formControlName="shortDescription">
+              </mat-form-field>
+        </div>
+    </div>
+  
+  
+    <div class="row ">
+  
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+          <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Old Price</mat-label>
+              <input   matInput placeholder="Ex. 500"  formControlName="oldPrice">
+            </mat-form-field>
+      </div>
+  
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+          <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Price</mat-label>
+              <input matInput placeholder="Ex. 400"  formControlName="price">
+            </mat-form-field>
+      </div>
+  
+  </div>
+  
+  
+  
+    <!-- ddl brand & category -->
+    <div class="row ">
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+            <h4>Please Select Brand</h4>
+            <mat-form-field appearance="fill">
+                <mat-label>Type ...</mat-label>
+                <mat-select   formControlName="brand">
+                    <mat-option *ngFor="let type of brandType" [value]="type.id">
+                        {{type.value}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+            <h4>Please Select Category</h4>
+            <mat-form-field appearance="fill">
+                <mat-label>Type ...</mat-label>
+                <mat-select  formControlName="category">
+                    <mat-option *ngFor="let type of categoryType" [value]="type.id">
+                        {{type.value}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+  
+    </div>
+  
+  
+    <div class="row mt-4">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <h4>Do this product available in stock ?</h4>
+        <mat-radio-group formControlName="stock" (change)="radioChange()">
+            <mat-radio-button class="me-3" [value]="true" selected>Yes</mat-radio-button>
+            <mat-radio-button class="me-3" [value]="false">No</mat-radio-button>
+        </mat-radio-group>
+    </div>
+  
+  </div>
+  
+  
+    <div class="row mt-4">
+  
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <h4>Do this product has multiple color ?</h4>
+            <mat-radio-group formControlName="isMultipleColor" (change)="radioChange()">
+                <mat-radio-button class="me-3" [value]="true">Yes</mat-radio-button>
+                <mat-radio-button class="me-3" [value]="false" selected>No</mat-radio-button>
+            </mat-radio-group>
+        </div>
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 " *ngIf="productForm.value.isMultipleColor">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label  >How many colors ?</mat-label>
+                <input  matInput placeholder="5" name="test" type="number" (keyup)="setNumberOfColor($event)" required formControlName="numberOfColor">
+            </mat-form-field>
+            <p class="text-danger" *ngIf="numberOfColor.errors?.['incorrect'] ">The maximum number is 50</p>
+  
+        </div>
+    </div>
+  
+    <div class="row" *ngIf="productForm.value.numberOfColor && productForm.value.isMultipleColor">
+        <div class="col">
+            <div formArrayName="colors">
+                <mat-label class="me-4" >Please make sure to select for all colors?</mat-label>
+                <ng-container *ngFor="let alias of colors.controls; let i=index">
+                    <input id="alias-{{ i }}"  style="width:21px;" class="rounded-circle color1 ms-3" type="color" [formControlName]="i">
+                </ng-container>
+            </div>
+        </div>
+    </div>
+  
+  
+    <!-- description -->
+    <div  class="mt-4" style="border-style: solid; border-width:1px; border-color: rgb(185 185 185);padding: 14px; border-radius: 25px;">
+        <div class="row mb-4">
+  
+            <div class="col mt-1">
+                <h4>Description: </h4>
+                <mat-radio-group formControlName="descriptionType" (change)="resetDescription()">
+                    <mat-radio-button class="me-3" value="text" >Text</mat-radio-button>
+                    <mat-radio-button class="me-3" value="table" >Table</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+  
+        <!-- text description -->
+        <ng-container *ngIf="productForm.value.descriptionType == 'text'">
+          <div id="toolbar">
+            <span class="ql-formats">
+              <button class="ql-bold"></button>
+              <button class="ql-italic"></button>
+              <button class="ql-underline"></button>
+              <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+              <select class="ql-size">
+                <option value="small">Small</option>
+                <option selected>Normal</option>
+                <option value="large">Large</option>
+                <option value="huge">Huge</option>
+              </select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-align" value="center"></button>
+              <button class="ql-align" value="right"></button>
+              <button class="ql-align" value="justify"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-list" value="ordered"></button>
+              <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-link"></button>
+            </span>
+          </div>
+  
+  
+          <div #editor class="quill-editor"  name="textDescription" ></div>
+        </ng-container>
+  
+        <!-- table descreption  -->
+        <ng-container formArrayName="tableDescription"  *ngIf="productForm.value.descriptionType == 'table'">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+                    <mat-form-field class="example-full-width" appearance="fill">
+                        <mat-label>Feature</mat-label>
+                        <input  [(ngModel)]="des.header" [ngModelOptions]="{standalone: true}" matInput placeholder="Ex. Processor">
+                      </mat-form-field>
+                </div>
+  
+                <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+                    <mat-form-field class="example-full-width" appearance="fill">
+                        <mat-label>Descrioption</mat-label>
+                        <textarea  [(ngModel)]="des.content" [ngModelOptions]="{standalone: true}" matInput placeholder="Ex. Intel Core I9"></textarea>
+                      </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" style="margin-top: 50px;">
+                    <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
+                        <button type="button" (click)="formatTable()" class="btn btn-success btn-md btn-block" style="width: 200px;">Add Another Feature</button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+  
+  
+    </div>
+  
+    <div class="row">
+        <div class="col">
+            <p>Form Value: {{format(productForm.value)}}</p>
+        </div>
+    </div>
+  
+  
+  
+  
+  
+  
+    <div class="row">
+        <div class="col-12" style="margin-top: 50px;">
+            <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
+                <button type="submit" class="btn btn-success btn-md btn-block" style="width: 300px;">Add</button>
+            </div>
+        </div>
+    </div>
+  
+  </form>
+  

@@ -49,7 +49,8 @@
               "node_modules/nouislider/distribute/nouislider.min.css",
               "node_modules/ngx-toasta/styles/style-material.css",
               "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss"
+              "node_modules/slick-carousel/slick/slick-theme.scss",
+              "node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -75,7 +76,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractLicenses": true,
+              "extractLicenses": true
             }
           },
           "defaultConfiguration": ""

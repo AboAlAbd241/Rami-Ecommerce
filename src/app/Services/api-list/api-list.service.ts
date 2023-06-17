@@ -11,7 +11,9 @@ export class ApiListService {
   // Add server urls in below object
   serverUrlPath = {
     // not auth request
+    getCategory :"/get-category",
 
+    // auth req 
     addProduct : "/admin/add-product",
     addCategory : "/admin/add-category",
   };

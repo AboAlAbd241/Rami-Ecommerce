@@ -1,0 +1,22 @@
+<div
+class="drop-zone"
+(dragover)="onDragOver($event)"
+(dragleave)="onDragLeave($event)"
+(drop)="onDrop($event)">
+<p>Drag and drop images here</p>
+<input type="file" id="image-upload" name="images" multiple (change)="onImageUpload($event)">
+</div>
+<div class="image-list" *ngIf="selectedImages.length > 0">
+<div class="image" *ngFor="let image of selectedImages; let i = index;" draggable="true"
+  (dragstart)="onDragStart($event, i)" (dragover)="onDragOverSelectedImage($event, i)"
+  (drop)="onDropSelectedImage($event, i)" (dragend)="onDragEnd($event)">
+  <img [src]="image.url" [alt]="image.name">
+  <button class="delete-btn" (click)="onDeleteImage(i)">x</button>
+</div>
+</div>
+<div *ngIf="selectedImages.length == 0">
+<p class="text-danger">Please select at least one image.</p>
+</div>
+<div *ngIf="supportedImageFlag">
+<p class="text-danger">The Supported Imges is jpg , jpeg and png</p>
+</div>

@@ -73,6 +73,7 @@ import { DownloadAppSectionComponent } from './DownloadAppSection/DownloadAppSec
 import { HomePageThreeSliderComponent } from './Slider/HomePageThreeSlider/HomePageThreeSlider.component';
 import { NewProductsCardComponent } from './NewProductsCard/NewProductsCard.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { UploadImagesComponent } from './upload-images/upload-images.component';
 
 
 @NgModule({
@@ -156,6 +157,7 @@ import { LoginDialogComponent } from './login-dialog/login-dialog.component';
         HomePageThreeSliderComponent,
         NewProductsCardComponent,
         LoginDialogComponent,
+        UploadImagesComponent,
     ],
     exports: [
         BrandslogoComponent,
@@ -195,7 +197,10 @@ import { LoginDialogComponent } from './login-dialog/login-dialog.component';
         CTASingleBannerComponent,
         DownloadAppSectionComponent,
         HomePageThreeSliderComponent,
-        NewProductsCardComponent
+        NewProductsCardComponent,
+        UploadImagesComponent,
+        MatProgressSpinnerModule,
+        MatRadioModule
     ]
 })
 export class GlobalModule {}

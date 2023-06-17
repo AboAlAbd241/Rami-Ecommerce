@@ -26,9 +26,13 @@ import { AddProductComponent } from './AddProduct/AddProduct.component';
 import { GlobalModule} from '../../Global/Global.module';
 import { ProductsComponent } from './Products/Products.component';
 import { ProductsRoutes} from './Products.routing';
+import { CategoryFormComponent } from './AddProduct/category-form/category-form.component';
+import { ProductFormComponent } from './AddProduct/product-form/product-form.component';
+import { AdminPanelModule } from '../admin-panel.module';
+
 
 @NgModule({
-   declarations: [ProductsComponent, EditProductComponent, AddProductComponent],
+   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, CategoryFormComponent, ProductFormComponent],
    imports: [
       CommonModule,
       FlexLayoutModule,
@@ -52,7 +56,8 @@ import { ProductsRoutes} from './Products.routing';
       MatGridListModule,
       GlobalModule,
       FormsModule,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      AdminPanelModule,
    ]
 })
 export class ProductsModule { }
