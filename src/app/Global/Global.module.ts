@@ -72,6 +72,7 @@ import { CTASingleBannerComponent } from './CallToAction/CTA-SingleBanner/CTA-Si
 import { DownloadAppSectionComponent } from './DownloadAppSection/DownloadAppSection.component';
 import { HomePageThreeSliderComponent } from './Slider/HomePageThreeSlider/HomePageThreeSlider.component';
 import { NewProductsCardComponent } from './NewProductsCard/NewProductsCard.component';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 
 
 @NgModule({
@@ -153,7 +154,8 @@ import { NewProductsCardComponent } from './NewProductsCard/NewProductsCard.comp
         CTASingleBannerComponent,
         DownloadAppSectionComponent,
         HomePageThreeSliderComponent,
-        NewProductsCardComponent
+        NewProductsCardComponent,
+        LoginDialogComponent,
     ],
     exports: [
         BrandslogoComponent,
