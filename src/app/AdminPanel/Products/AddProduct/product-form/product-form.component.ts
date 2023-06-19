@@ -133,7 +133,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
     this._snackBar.open(msg, '', {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
-      duration: 2000,
+      duration: 3000,
       panelClass: panelClass,
     });
   }
@@ -210,6 +210,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
     this.textDescription = '';
     this.productForm.get('tableDescription').clear();
     this.cdr.detectChanges();
+    this.editor.root.innerHTML = '';
 
     if(this.productForm.value.descriptionType == 'text'){
       this.editor = new Quill(this.editorElementRef.nativeElement, {
@@ -235,7 +236,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
   onSubmit(){
 
-    if (this.productForm.get('selectedImages').value.length == 0) {
+    if (this.productForm.get('selectedImages').value == null || this.productForm.get('selectedImages').value == undefined || this.productForm.get('selectedImages').value.length == 0) {
       this.openSnackBar('Please select at least one image','error');
       return;
     }
@@ -251,8 +252,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
       this.openSnackBar('Please fill the required fields ','error');
       return;
     }
-    if (this.productForm.get('isMultipleColor').value &&
-          (this.productForm.get('numberOfColor').value == null || this.productForm.get('numberOfColor').value.trim == '' ||
+    if (this.productForm.get('isMultipleColor').value == null || this.productForm.get('isMultipleColor').value &&
+          (this.productForm.get('numberOfColor').value == null || this.productForm.get('numberOfColor').value == '' ||
               this.productForm.get('numberOfColor').value == undefined)) {
       this.openSnackBar('Please fill the required fields ','error');
       return;
@@ -316,8 +317,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
         this.loading = false;
         if(data.message == '00000'){
           this.openSnackBar("Product has been Added succefully","success");
-          this.productForm.reset();
-          this.uploadImagesComponent.resetImage();
+          this.resetForm();
         }else{
           this.openSnackBar("Something went wrong, please try again","error");
         }
@@ -339,6 +339,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
   receiveImages(images){
     this.productForm.get('selectedImages').setValue(images);
     this.selectedImages = images;
+  }
+
+  resetForm(){
+          this.uploadImagesComponent.resetImage();
+          this.resetDescription();
+          this.productForm = this.fb.group({
+            productName: ['',Validators.required],
+            price: ['' ,Validators.required],
+            oldPrice: [''],
+            shortDescription: [''],
+            stock: [true],
+            brand: ['' ],
+            category: ['',Validators.required],
+            isMultipleColor: [false],
+            numberOfColor: [''],
+            descriptionType:this.fb.control('text'),
+            tableDescription:this.fb.array([]),
+            colors: this.fb.array([]),
+            selectedImages:  [[],Validators.required],
+          });
   }
 
   ngOnDestroy() {
