@@ -6,15 +6,43 @@ class="drop-zone"
 <p>Drag and drop images here</p>
 <input type="file" id="image-upload" name="images" multiple (change)="onImageUpload($event)">
 </div>
-<div class="image-list" *ngIf="selectedImages.length > 0">
-<div class="image" *ngFor="let image of selectedImages; let i = index;" draggable="true"
+<!-- <div class="image-list" *ngIf="selectedImages.length > 0"> -->
+<!-- <div class="image" *ngFor="let image of selectedImages; let i = index;" draggable="true"
   (dragstart)="onDragStart($event, i)" (dragover)="onDragOverSelectedImage($event, i)"
   (drop)="onDropSelectedImage($event, i)" (dragend)="onDragEnd($event)">
   <img [src]="image.url" [alt]="image.name">
   <button class="delete-btn" (click)="onDeleteImage(i)">x</button>
+</div> -->
+
+<div class="image-list" *ngIf="imagesList.length > 0">
+
+  <!-- <app-upload-images  #uploadImage (imagesEvent)="receiveImages($event)"></app-upload-images> -->
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-4">
+      <div class="image-container">
+        <div
+          class="image"
+          *ngFor="let image of imagesList; let i = index"
+          draggable="true"
+          (dragstart)="dragStart($event, i)"
+          (dragover)="dragOver($event)"
+          (drop)="drop($event, i)"
+        >
+          <img [src]="image.imagePath" alt="Product Image" />
+          <button class="delete-btn" (click)="deleteImage(i)">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
 </div>
-</div>
-<div *ngIf="selectedImages.length == 0">
+<div *ngIf="imagesList.length == 0">
 <p class="text-danger">Please select at least one image.</p>
 </div>
 <div *ngIf="supportedImageFlag">

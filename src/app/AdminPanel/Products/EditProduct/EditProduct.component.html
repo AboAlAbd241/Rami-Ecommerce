@@ -1,113 +1,214 @@
-<form [formGroup]="form">
-   <div class="product-detail-page section-gap" *ngIf="editProductDetail">
-      <div class="container">
-         <div fxLayout='row wrap' fxLayoutAlign="center center" class="col-gap">
-            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md=90 fxFlex.lg="80" fxFlex.xl="90">
-               <div fxLayout='row wrap' class="col-gap position-relative">
-                  <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md=50 fxFlex.lg="50" fxFlex.xl="50">
-                     <div fxLayout='row wrap'>
-                        <div fxFlex.xs="15" fxFlex.sm="15" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15">
-                           <div class="product-detail-image-gallery pr-4">
-                              <mat-grid-list cols="1" rowHeight="1:1" gutterSize="20px">
-                                 <mat-grid-tile *ngFor="let img of editProductDetail?.image_gallery; let i=index">
-                                    <div class="product-image-gallery-item edit-icon">
-                                       <a id="{{i}}_img" class="p-link" [ngClass]="{ 'border-active': i === 0 }" href="javascript:void(0)" (mouseenter)="getImagePath(img, i)">
-                                         <img [src]="img" alt="">
-                                       </a>
-                                       <button class="edit-btn" md-mini-fab type="button">
-                                          <label for="fileToUpload"><mat-icon>edit</mat-icon></label>
-                                       </button>
-                                       <input mat id="fileToUpload" type="file"  accept="image/*" style="display:none;">
-                                    </div>
-                                 </mat-grid-tile>
-                              </mat-grid-list>
-                           </div>
-                           <!-- product-detail-image-gallery -->
-                        </div>
-                        <div fxFlex.xs="85" fxFlex.sm="85" fxFlex.md="85" fxFlex.lg="85" fxFlex.xl="85" class="relative" *ngIf="mainImgPath">
-                           <embryo-ImgZoom 
-                              [imgSrc]="mainImgPath" 
-                                imgStyle="width:auto; height:auto;" 
-                                resultStyle="background-repeat: no-repeat; z-index: 2; position:absolute;
-                                               -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-                                                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); top: 0;left: 100%;"
-                                lensStyle="width:100px; height:100px"
-                                containerStyle="">
-                           </embryo-ImgZoom>
-                        </div>
-                     </div>
-                  </div>
-                  <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md=50 fxFlex.lg="50" fxFlex.xl="50">
-                     <div class="product-detail-content ml-3">
-                        <a class="primary-color font-medium" href="javascript:void(0)" routerLink="/admin-panel/products">Back to Product</a>
-                        <h3 class="edit-text"><input matInput formControlName="name" type="text"></h3>
-                        <div class="product-detail-price">
-                           <h4 class="accent-color edit-text"><input matInput  formControlName="price" type="text"></h4>
-                        </div>
-                        <!-- product-detail-price -->
-                        <ul class="no-style mb-4">
-                           <li class="edit-text" fxLayout="row wrap" fxLayoutAlign="start start">
-                              <span class="font-medium"> Availablity </span>: 
-                              <input class="ml-2" matInput  formControlName="availablity" type="text">
-                           </li>
-                           <li class="edit-text" fxLayout="row wrap" fxLayoutAlign="start start">
-                              <span class="font-medium">Product Code </span>: 
-                              <input class="ml-2" matInput formControlName="product_code" type="text">
-                           </li>
-                           <li class="edit-text" fxLayout="row wrap" fxLayoutAlign="start start">
-                              <span class="font-medium">Tags</span>: 
-                              <input class="ml-2" matInput formControlName="tags" type="text">
-                           </li>
-                        </ul>
-                        <div class="short-des">
-                           <p class="edit-text"><textarea matInput formControlName="description"></textarea></p>
-                        </div>
-                        <!-- short-des -->
-                        <div class="bullets-points edit-text">
-                           <div class="font-medium">Featured points :</div>
-                           <p><input matInput formControlName="features" type="text"></p>
-                        </div>
-                        <!-- bullets-points -->
-                        <div class="mb-3 select-group">
-                           <ng-container *ngIf="editProductDetail.type == 'men' || editProductDetail.type == 'women'">
-                              <div class="edit-text edit-check mb-3">
-                                 <div class="font-medium mb-2">Color Varients :</div>
-                                 <ng-container *ngFor="let color of colorsArray">
-                                 <mat-checkbox class="mr-3">{{color}}</mat-checkbox>
-                                 </ng-container>
-                              </div>
-                              <div class="edit-text edit-check mb-3">
-                                 <div class="font-medium mb-2">Size Varients :</div>
-                                 <ng-container *ngFor = "let size of sizeArray">
-                                 <mat-checkbox class="mr-3">{{size}}</mat-checkbox>
-                                 </ng-container>
-                              </div>
-                           </ng-container>
-                           <mat-form-field class="edit-text edit-check mb-3">
-                              <div class="font-medium mb-2">Total Products :</div>
-                              <ng-container>
-                                 <input type="number" matInput value="5"> 
-                              </ng-container>
-                           </mat-form-field>
-                        </div>
-                        <div class="mb-5 detail-btns">
-                           <button mat-raised-button color="accent" class="button-lg mr-3">Save</button>
-                           <button class="button-lg" mat-raised-button>Discard</button>
-                        </div>
-                        <!-- detail-btns -->
-                        <div fxLayoutAlign="start center">
-                           <div class="mr-3"> <span>Share Now</span></div>
-                           <div class="detail-product-share">
-                           <embryo-SocialShare></embryo-SocialShare>
-                         </div>
-                        </div>
-                     </div>
-                     <!-- product-detail-content -->
-                  </div>
-               </div>
-            </div>
-         </div>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+   <div class="row ">
+ 
+     <!-- <app-upload-images  #uploadImage (imagesEvent)="receiveImages($event)"></app-upload-images> -->
+     <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 mt-4">
+        <div class="image-container">
+          <div
+            class="image-item"
+            *ngFor="let image of imagesList; let i = index"
+            draggable="true"
+            (dragstart)="dragStart($event, i)"
+            (dragover)="dragOver($event)"
+            (drop)="drop($event, i)"
+          >
+            <img [src]="image.imagePath" alt="Product Image" />
+            <button class="delete-button" (click)="deleteImage(i)">Delete</button>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 mt-4">
+        <input type="file" (change)="addImage($event)" accept="image/*" />
+      </div>
+    </div>
+
    </div>
-   <!-- product-detail-page -->
-</form>
+
+   <div class="spinner-container" *ngIf="loading">
+       <mat-spinner class="custom-spinner"></mat-spinner>
+     </div>
+ 
+   <div class="row ">
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+           <mat-form-field class="example-full-width" appearance="fill">
+               <mat-label>Product Name</mat-label>
+               <input   matInput placeholder="Ex. Computers"  formControlName="productName">
+             </mat-form-field>
+       </div>
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+           <mat-form-field class="example-full-width" appearance="fill">
+               <mat-label>Short Description</mat-label>
+               <input matInput placeholder="Dell Core I9 ,1T SSD"  formControlName="shortDescription">
+             </mat-form-field>
+       </div>
+   </div>
+ 
+ 
+   <div class="row ">
+ 
+     <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+         <mat-form-field class="example-full-width" appearance="fill">
+             <mat-label>Old Price</mat-label>
+             <input   matInput type="number" placeholder="Ex. 500"  formControlName="oldPrice">
+           </mat-form-field>
+     </div>
+ 
+     <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+         <mat-form-field class="example-full-width" appearance="fill">
+             <mat-label>Price</mat-label>
+             <input matInput type="number" placeholder="Ex. 400"  formControlName="price">
+           </mat-form-field>
+     </div>
+ 
+ </div>
+ 
+ 
+ 
+   <!-- ddl brand & category -->
+   <div class="row ">
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+           <h4>Please Select Brand</h4>
+           <mat-form-field appearance="fill">
+               <mat-label>Type ...</mat-label>
+               <mat-select   formControlName="brand">
+                   <mat-option *ngFor="let type of brandType" [value]="type.id">
+                       {{type.value}}
+                   </mat-option>
+               </mat-select>
+           </mat-form-field>
+       </div>
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+           <h4>Please Select Category</h4>
+           <mat-form-field appearance="fill">
+               <mat-label>Type ...</mat-label>
+               <mat-select  formControlName="category">
+                   <mat-option *ngFor="let type of categoryType" [value]="type.id">
+                       {{type.value}}
+                   </mat-option>
+               </mat-select>
+           </mat-form-field>
+       </div>
+ 
+   </div>
+ 
+ 
+   <div class="row mt-4">
+     <div class="col-lg-12 col-md-12 col-sm-12">
+       <h4>Do this product available in stock ?</h4>
+       <mat-radio-group formControlName="stock" (change)="radioChange()">
+           <mat-radio-button class="me-3" [value]="true" selected>Yes</mat-radio-button>
+           <mat-radio-button class="me-3" [value]="false">No</mat-radio-button>
+       </mat-radio-group>
+   </div>
+ 
+ </div>
+ 
+ 
+   <div class="row mt-4">
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12">
+           <h4>Do this product has multiple color ?</h4>
+           <mat-radio-group formControlName="isMultipleColor" (change)="radioChange()">
+               <mat-radio-button class="me-3" [value]="true">Yes</mat-radio-button>
+               <mat-radio-button class="me-3" [value]="false" selected>No</mat-radio-button>
+           </mat-radio-group>
+       </div>
+ 
+       <div class="col-lg-6 col-md-12 col-sm-12 " *ngIf="productForm?.value?.isMultipleColor">
+           <mat-form-field class="example-full-width" appearance="fill">
+               <mat-label  >How many colors ?</mat-label>
+               <input  matInput placeholder="5" name="test" type="number" (keyup)="setNumberOfColor($event)" required formControlName="numberOfColor">
+           </mat-form-field>
+           <p class="text-danger" *ngIf="numberOfColor.errors?.['incorrect'] ">The maximum number is 50</p>
+ 
+       </div>
+   </div>
+ 
+   <div class="row" *ngIf="productForm?.value?.numberOfColor && productForm?.value?.isMultipleColor">
+       <div class="col">
+           <div formArrayName="colors">
+               <mat-label class="me-4" >Please make sure to select for all colors?</mat-label>
+               <ng-container *ngFor="let alias of colors.controls; let i=index">
+                   <input id="alias-{{ i }}"  style="width:21px;" class="rounded-circle color1 ms-3" type="color" [formControlName]="i">
+               </ng-container>
+           </div>
+       </div>
+   </div>
+ 
+ 
+   <!-- description -->
+   <div  class="mt-4" style="border-style: solid; border-width:1px; border-color: rgb(185 185 185);padding: 14px; border-radius: 25px;">
+       <!-- text description -->
+       <h4 class="me-4" >Description</h4>
+
+         <div id="toolbar">
+           <span class="ql-formats">
+             <button class="ql-bold"></button>
+             <button class="ql-italic"></button>
+             <button class="ql-underline"></button>
+             <button class="ql-strike"></button>
+           </span>
+           <span class="ql-formats">
+             <select class="ql-size">
+               <option value="small">Small</option>
+               <option selected>Normal</option>
+               <option value="large">Large</option>
+               <option value="huge">Huge</option>
+             </select>
+           </span>
+           <span class="ql-formats">
+             <button class="ql-align" value="center"></button>
+             <button class="ql-align" value="right"></button>
+             <button class="ql-align" value="justify"></button>
+           </span>
+           <span class="ql-formats">
+             <button class="ql-list" value="ordered"></button>
+             <button class="ql-list" value="bullet"></button>
+           </span>
+           <span class="ql-formats">
+             <button class="ql-link"></button>
+           </span>
+         </div>
+ 
+ 
+         <div #editor class="quill-editor"  name="textDescription" ></div>
+ 
+ 
+ 
+   </div>
+ 
+   <div class="row">
+       <div class="col">
+           <p>Form Value: {{format(productForm.value)}}</p>
+       </div>
+   </div>
+
+   <div class="row">
+      <div class="col">
+          <p>Image value: {{format(imagesList)}}</p>
+      </div>
+  </div>
+ 
+ 
+ 
+ 
+ 
+ 
+   <div class="row">
+       <div class="col-12" style="margin-top: 50px;">
+           <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
+               <button type="submit" class="btn btn-success btn-md btn-block" style="width: 300px;">Update</button>
+           </div>
+       </div>
+   </div>
+ 
+ </form>
+ 

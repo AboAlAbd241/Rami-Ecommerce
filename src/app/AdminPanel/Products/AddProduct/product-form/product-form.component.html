@@ -2,7 +2,9 @@
 
     <div class="row ">
   
-      <app-upload-images  #uploadImage (imagesEvent)="receiveImages($event)"></app-upload-images>
+      <app-upload-images  #uploadImage [imagesList]="selectedImages"
+       (imagesEvent)="receiveImages($event)"
+        (deletedImages)="receiveDeletedImages($event)"></app-upload-images>
   
     </div>
 
@@ -128,15 +130,11 @@
   
             <div class="col mt-1">
                 <h4>Description: </h4>
-                <mat-radio-group formControlName="descriptionType" (change)="resetDescription()">
-                    <mat-radio-button class="me-3" value="text" >Text</mat-radio-button>
-                    <mat-radio-button class="me-3" value="table" >Table</mat-radio-button>
-                </mat-radio-group>
             </div>
         </div>
   
         <!-- text description -->
-        <ng-container *ngIf="productForm.value.descriptionType == 'text'">
+        <ng-container >
           <div id="toolbar">
             <span class="ql-formats">
               <button class="ql-bold"></button>
@@ -170,42 +168,21 @@
           <div #editor class="quill-editor"  name="textDescription" ></div>
         </ng-container>
   
-        <!-- table descreption  -->
-        <ng-container formArrayName="tableDescription"  *ngIf="productForm.value.descriptionType == 'table'">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
-                    <mat-form-field class="example-full-width" appearance="fill">
-                        <mat-label>Feature</mat-label>
-                        <input  [(ngModel)]="des.header" [ngModelOptions]="{standalone: true}" matInput placeholder="Ex. Processor">
-                      </mat-form-field>
-                </div>
-  
-                <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
-                    <mat-form-field class="example-full-width" appearance="fill">
-                        <mat-label>Descrioption</mat-label>
-                        <textarea  [(ngModel)]="des.content" [ngModelOptions]="{standalone: true}" matInput placeholder="Ex. Intel Core I9"></textarea>
-                      </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12" style="margin-top: 50px;">
-                    <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
-                        <button type="button" (click)="formatTable()" class="btn btn-success btn-md btn-block" style="width: 200px;">Add Another Feature</button>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-  
   
     </div>
-  
-    <!-- <div class="row">
+<!--   
+    <div class="row">
         <div class="col">
             <p>Form Value: {{format(productForm.value)}}</p>
         </div>
-    </div> -->
+    </div>
   
-  
+    <div class="row">
+        <div class="col">
+            <p>Image value: {{format(selectedImages)}}</p>
+        </div>
+    </div>
+   -->
   
   
   
@@ -213,7 +190,9 @@
     <div class="row">
         <div class="col-12" style="margin-top: 50px;">
             <div class="d-flex flex-column" style="justify-content: center; align-items: center;">
-                <button type="submit" class="btn btn-success btn-md btn-block" style="width: 300px;">Add</button>
+                <button type="submit" class="btn btn-success btn-md btn-block" style="width: 300px;">
+                    {{ productDate && productDate.id ? 'Update' : 'Add' }}
+                </button>
             </div>
         </div>
     </div>

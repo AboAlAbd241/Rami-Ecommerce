@@ -12,10 +12,13 @@ export class ApiListService {
   serverUrlPath = {
     // not auth request
     getCategory :"/get-category",
+    getProductAdmin:"/admin-get-product",
 
     // auth req 
     addProduct : "/admin/add-product",
     addCategory : "/admin/add-category",
+    deleteProduct: "/admin/delete-product",
+    updateProduct: "/admin/update-product"
   };
 
 

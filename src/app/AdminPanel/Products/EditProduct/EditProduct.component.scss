@@ -1,0 +1,115 @@
+mat-form-field{
+    display: block;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  
+  .mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+  
+  ::ng-deep .mat-form-field-underline {
+    display: none;
+  }
+  
+  ::ng-deep .mat-input-underline {
+  display: none;
+  }
+  
+  .color1 {
+  -webkit-appearance: none;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  }
+  .color1::-webkit-color-swatch {
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  }
+  .color1::-webkit-color-swatch-wrapper {
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  }
+  
+  
+  .quill-editor {
+    min-height: 150px; /* Adjust the height value as needed */
+  }
+  
+  
+  #editor.quill-editor {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+    padding: 10px;
+    pointer-events: auto;
+  }
+  
+  
+  
+  .spinner-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .mat-spinner {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  .mat-spinner {
+    ::ng-deep circle {
+        stroke: #3d2080;
+    }
+  }
+  
+ /* product-details.component.css */
+.image-container {
+  display: flex;
+  overflow-x: auto;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}

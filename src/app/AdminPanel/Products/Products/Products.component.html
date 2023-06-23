@@ -69,7 +69,7 @@
       </mat-form-field>
    </div>
 </div>
-<ng-container *ngIf="productsGrid && productsGrid.length >= 0; else elseBlock">
+<ng-container *ngIf="productsGrid && productsGrid.length > 0; else elseBlock">
    <ng-container *ngIf="showType == 'list';else gridtype">
       <div fxLayout="row wrap">
          <div fxFlex.gt-md="100" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
@@ -85,7 +85,7 @@
                             <ng-container matColumnDef="image">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Image</th>
                               <td class="text-nowrap team-images-wrap py-3 px-3" mat-cell *matCellDef="let element">
-                                 <img class="img-circle inline-block" src="{{element.image}}" width="30" height="30">  
+                                 <img class="img-circle inline-block" src="{{getFirstImage(element?.images)}}" width="30" height="30">  
                               </td>
                            </ng-container> 
                            <ng-container matColumnDef="name">
@@ -94,20 +94,20 @@
                            </ng-container>
                            <ng-container matColumnDef="brand">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
-                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element.brand}}</td>
+                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element?.brand?.englishName}}</td>
                            </ng-container>
                            <ng-container matColumnDef="category">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
-                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element.category}}</td>
+                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element?.categories[0]?.englishName}}</td>
                            </ng-container>
                             <ng-container matColumnDef="product_code">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Product Code</th>
                               <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element.product_code}}
                               </td>
                            </ng-container>
-                           <ng-container matColumnDef="discount_price">
-                              <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Discount Price</th>
-                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">${{element.discount_price}}</td>
+                           <ng-container matColumnDef="old_price">
+                              <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Old price</th>
+                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">${{element?.oldPrice}}</td>
                            </ng-container>
                            <ng-container matColumnDef="price">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
@@ -119,7 +119,7 @@
                                  <button mat-icon-button (click) ="onEditProduct(element)" color="primary">
                                     <i class="material-icons">edit</i>
                                  </button> 
-                                 <button color="warn" mat-icon-button (click)="deleteProduct(i)">
+                                 <button color="warn" mat-icon-button (click)="deleteProduct(i, element.id, element?.images[0]?.imagePath)">
                                     <mat-icon class="">delete</mat-icon>
                                  </button>
                               </td>
@@ -138,14 +138,14 @@
       </div>
    </ng-container>
    <ng-template #gridtype>
-      <div fxLayout="row wrap" fxLayoutAlign="start stretch" *ngIf="productsGrid && productsGrid.length>0">
+      <div fxLayout="row wrap" fxLayoutAlign="start stretch" *ngIf="productsGrid && productsGrid.length > 0">
          <div fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100" *ngFor="let product of productsGrid; let i=index;">
             <mat-card class="product-card">
                <a class="p-link">
-                  <img width="626" height="800" mat-card-image [src] ="product?.image" alt="Photo of a Shiba Inu">
+                     <img width="626" height="800" mat-card-image [src] ="getFirstImage(product?.images)" alt="Photo of a Shiba Inu">
                </a>
                <div class="wishlist-icon">
-                  <a (click)="deleteProduct(i)"><mat-icon> delete </mat-icon></a>
+                  <a (click)="deleteProduct(i, product.id, product?.images)"><mat-icon> delete </mat-icon></a>
                </div>
                <!-- wishlist-icon-->
                <mat-card-content class="product-content relative">
@@ -168,6 +168,7 @@
       </div>
    </ng-template>
 </ng-container>
-<ng-template #elseBlock>
+<ng-template #elseBlock >
    <h5 class="ml-5">No product found</h5>
 </ng-template>
+
