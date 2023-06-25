@@ -39,7 +39,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
   //description
   textDescription = '';
-  // des = {header : null , content : null};
   
   //spinner
   loading: boolean = false;
@@ -86,7 +85,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
 
     var payload = {
-      apiName: 'getCategory',
+      apiName: 'getCategoryAndBrands',
       body: '',
       method: 'POST'
     };
@@ -126,7 +125,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
         theme: 'snow',
         placeholder: 'Enter the description',
         modules: {
-          table: true,
           toolbar: {
             container: '#toolbar',
             handlers: {

@@ -29,10 +29,11 @@ import { ProductsRoutes} from './Products.routing';
 import { CategoryFormComponent } from './AddProduct/category-form/category-form.component';
 import { ProductFormComponent } from './AddProduct/product-form/product-form.component';
 import { AdminPanelModule } from '../admin-panel.module';
+import { CategoryFeatureComponent } from './AddProduct/category-feature/category-feature.component';
 
 
 @NgModule({
-   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, CategoryFormComponent, ProductFormComponent],
+   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, CategoryFormComponent, ProductFormComponent, CategoryFeatureComponent],
    imports: [
       CommonModule,
       FlexLayoutModule,

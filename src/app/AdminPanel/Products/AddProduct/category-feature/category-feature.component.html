@@ -1,0 +1,39 @@
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+    <div class="form-group">
+        <label class="form-label">Category:</label>
+        <select class="form-control" (change)="getFeature()" [(ngModel)]='selectedCategory' [ngModelOptions]="{standalone: true}">
+          <option value="" disabled selected>Select Category</option>
+          <!-- Populate the options dynamically from the database -->
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.englishName }}</option>
+        </select>
+    </div>
+
+    <ng-container *ngIf="categories.length > 0 && selectedCategory">
+    
+        <div formArrayName="categoryFeatures" class="category-feature-container" >
+        <div *ngFor="let categoryFeature of categoryFeatureControls.controls; let i = index" [formGroupName]="i" class="category-feature-row">
+            <div class="form-group">
+            <label class="form-label">Key:</label>
+            <input type="text" formControlName="key" class="form-control">
+            </div>
+            <div formArrayName="values" class="value-container">
+                <div *ngFor="let value of categoryFeature.controls.values.controls; let j = index" [formGroupName]="j" class="value-row">
+                    <label class="form-label">Value:</label>
+                    <input type="text" formControlName="value" class="form-control">
+                    <button type="button" (click)="removeValue(categoryFeature, j)" class="remove-value-btn">Remove Value</button>
+                  </div>
+                <button type="button" (click)="addValue(categoryFeature)" class="add-value-btn">Add Value</button>
+            </div>
+              
+            <button type="button" (click)="removeCategoryFeature(i)" class="remove-category-btn">Remove Category Feature</button>
+        </div>
+        </div>
+        <div *ngIf="categoryForm.get('categoryFeatures').errors?.required" class="validation-error">Please fill in all required fields.</div>
+        <button type="button" (click)="addCategoryFeature()" class="add-category-btn">Add Category Feature</button>
+        <button type="submit" class="submit-btn">Submit</button>
+    </ng-container>
+</form>
+  
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner class="custom-spinner"></mat-spinner>
+  </div>

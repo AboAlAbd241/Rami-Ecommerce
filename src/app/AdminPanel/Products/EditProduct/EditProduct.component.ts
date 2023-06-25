@@ -84,7 +84,7 @@ export class EditProductComponent implements OnInit {
 	});
 
 	  var payload = {
-		apiName: 'getCategory',
+		apiName: 'getCategoryAndBrands',
 		body: '',
 		method: 'POST'
 	  };

@@ -11,14 +11,16 @@ export class ApiListService {
   // Add server urls in below object
   serverUrlPath = {
     // not auth request
-    getCategory :"/get-category",
+    getCategoryAndBrands :"/get-category-and-brands",
     getProductAdmin:"/admin-get-product",
+    getCategory:"/get-category",
 
     // auth req 
     addProduct : "/admin/add-product",
     addCategory : "/admin/add-category",
     deleteProduct: "/admin/delete-product",
-    updateProduct: "/admin/update-product"
+    updateProduct: "/admin/update-product",
+    saveCategoryFeature:"/admin/save-category-feature",
   };
 
 
