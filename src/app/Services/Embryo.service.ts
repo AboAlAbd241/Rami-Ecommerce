@@ -16,12 +16,12 @@ export class EmbryoService {
 
 	sidenavOpen                 : boolean = false;
 	paymentSidenavOpen          : boolean = false;
-	isDirectionRtl              : boolean = false;
+	isDirectionRtl              : boolean = true;
 	featuredProductsSelectedTab : any = 0;
 	newArrivalSelectedTab       : any = 0;
 
 	/**** Get currency code:- https://en.wikipedia.org/wiki/ISO_4217 *****/
-	currency  : string = 'USD';
+	currency  : string = 'ILS';
 	language  : string = 'en';
 
 	shipping  : number = 12.95;

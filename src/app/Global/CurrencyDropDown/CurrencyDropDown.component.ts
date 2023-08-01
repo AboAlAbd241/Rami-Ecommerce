@@ -9,7 +9,7 @@ export class CurrencyDropDownComponent implements OnInit {
 
    @Output() selectedCurrency : EventEmitter<any> = new EventEmitter();
 
-   @Input() selectedValue : string = "USD";
+   @Input() selectedValue : string = "ILR";
 
    currencyArray : any = [
       {

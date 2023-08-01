@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EmbryoService } from '../../../Services/Embryo.service';
+import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-HomeThree',
@@ -8,21 +10,22 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 })
 export class HomeThreeComponent implements OnInit {
 
-   categories : any = {
-      clothing     : [],
-      shoes        : [],
-      accessories  : [],
-      gadgets      : []
-   }
+
    products : any;
    allProducts : any;
    newProductsSliderData : any;
+
+   categories : any;
+   brands: any = [];
+
+
    slideConfig = {
       slidesToShow: 4,
       slidesToScroll:2,
       autoplay: true,
       autoplaySpeed: 2000,
       dots: false,
+      arrows: true,
       responsive: [
          {
             breakpoint: 992,
@@ -53,11 +56,12 @@ export class HomeThreeComponent implements OnInit {
 
    rtlSlideConfig = {
       slidesToShow: 4,
-      slidesToScroll:4,
+      slidesToScroll:1,
       autoplay: true,
-      autoplaySpeed: 2000,
+      autoplaySpeed: 1500,
       dots: false,
       rtl: true,
+      arrows: true,
       responsive: [
          {
             breakpoint: 992,
@@ -86,79 +90,70 @@ export class HomeThreeComponent implements OnInit {
       ]
    };
 
-   constructor(public embryoService : EmbryoService) { }
+	subscription : any ;
+
+
+   constructor(public embryoService : EmbryoService,private httpReq : HttpRequestService) { }
 
    ngOnInit() {
       this.getProducts();
+      this.getCategoriesAndBrands();
    }
 
    public getProducts() {
-      this.embryoService.getProducts().valueChanges()
-         .subscribe(res => this.getProductsResponse(res));
+      var payload = {
+         apiName: 'getProductAdmin',
+         body: '',
+         method: 'POST'
+         };
+      
+         this.subscription = this.httpReq.makeHttpRequest(payload)
+         .pipe(
+         map(res => res)
+         )
+         .subscribe(
+         data => {
+            this.getProductsResponse(data.products);
+         },
+         error => {
+            // Handle the subscription error here
+            console.error('An error occurred:', error);
+         }
+         );
+   }
+
+   public getCategoriesAndBrands(){
+      var payload = {
+         apiName: 'getCategoryAndBrands',
+         body: '',
+         method: 'POST'
+         };
+      
+         this.subscription = this.httpReq.makeHttpRequest(payload)
+         .pipe(
+         map(res => res)
+         )
+         .subscribe(
+         data => {
+            this.categories = data.categories;
+            this.brands = data.brands;
+         },
+         error => {
+            // Handle the subscription error here
+            console.error('An error occurred:', error);
+         }
+         );
    }
 
    public getProductsResponse(res) {
       this.products = res;
-      this.allProducts = ((res.men.concat(res.women)).concat(res.gadgets)).concat(res.accessories);
-     
-      for(let product of this.allProducts) {
-         switch (product.category_type) {
-            case "clothing":
-               this.categories.clothing.push(product);
-               break;
-
-            case "shoes":
-               this.categories.shoes.push(product);
-               break;
-
-            case "accessories":
-               this.categories.accessories.push(product);
-               break;
-
-            case "gadgets":
-               this.categories.gadgets.push(product);
-               break;
-            
-            default:
-               // code...
-               break;
-         }
-      }
+      this.newProductsSliderData = res;
    }
 
-   public onNewArrivalsSelectedTab(tabIndex) {
-      this.newProductsSliderData = null;
-      switch (tabIndex) {
-         case 0:
-            this.newProductsSliderData = this.allProducts;
-         break;
-
-         case 1:
-            this.newProductsSliderData = this.products.men;
-         break;
-
-         case 2:
-            this.newProductsSliderData = this.products.women;
-         break;
-
-         case 3:
-            this.newProductsSliderData = this.products.gadgets;
-         break;
-         
-         default:
-            // code...
-            break;
-      }
-
-      return true;
-   }
 
    public addToCart(value) {
       this.embryoService.addToCart(value);
    }
 
-   public addToWishlist(value) {
-      this.embryoService.addToWishlist(value);
-   }
 
 }

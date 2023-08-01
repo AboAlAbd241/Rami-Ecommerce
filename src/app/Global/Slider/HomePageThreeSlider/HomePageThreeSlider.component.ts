@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { map } from 'rxjs';
+import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
 
 @Component({
   selector: 'embryo-HomePageThreeSlider',
@@ -7,34 +9,19 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 })
 export class HomePageThreeSliderComponent implements OnInit, OnChanges {
 
-   @Input() isRTL : boolean = false;
+   
+   @Input() isRTL : boolean = true;
 
    slideConfig : any;
+   subscription;
 
-   slides : any = [
-      {
-         img         : "assets/images/h-slider-1.jpg",
-         content     : "2019 Latest Collection",
-         heading_one : "New Fashion Collection",
-        
-      },
-      {
-         img         : "assets/images/h-slider-2.jpg",
-         content     : "2019 Latest Collection",
-         heading_one : "Summer Time Collection",
-   
-      }, 
-      {
-         img         : "assets/images/h-slider-3.jpg",
-         content     : "2019 Latest Collection",
-         heading_one : "Men's Suiting and Clothing",
-         
-      }
-   ]
 
-   constructor() { }
+   slides : any[] = [];
+
+   constructor(private httpReq : HttpRequestService) { }
 
    ngOnInit() {
+      this.getBanners();
    }
 
    ngOnChanges() {
@@ -46,11 +33,12 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
          autoplaySpeed: 2000,
          dots: false,
          rtl: this.isRTL,
+         arrows: true, 
          responsive: [
             {
                breakpoint: 991,
                settings: {
-                  arrows: false,
+                  arrows: true,
                   slidesToShow: 1,
                   slidesToScroll: 1,
                   autoplay: true,
@@ -60,7 +48,7 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
             {
                breakpoint: 768,
                settings: {
-                  arrows: false,
+                  arrows: true,
                   slidesToShow: 1,
                   slidesToScroll: 1,
                   autoplay: true,
@@ -70,7 +58,7 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
             {
                breakpoint: 480,
                settings: {
-                  arrows: false,
+                  arrows: true,
                   slidesToShow: 1,
                   slidesToScroll: 1,
                   autoplay: true,
@@ -79,6 +67,32 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
             }
          ]
       };
+   }
+
+   getBanners(){
+      var payload = {
+         apiName: 'getBanners',
+         body: '',
+         method: 'POST'
+       };
+   
+       this.subscription = this.httpReq.makeHttpRequest(payload)
+       .pipe(
+         map(res => res)
+       )
+       .subscribe(
+         data => {
+            data.banners.sort((a, b) => a.priority - b.priority);
+            data.banners.forEach(element => {
+               this.slides.push({img: element.imagePath})
+            });
+           
+         },
+         error => {
+           // Handle the subscription error here
+           console.error('An error occurred:', error);
+         }
+       );
    }
 
 }

@@ -30,10 +30,11 @@ import { CategoryFormComponent } from './AddProduct/category-form/category-form.
 import { ProductFormComponent } from './AddProduct/product-form/product-form.component';
 import { AdminPanelModule } from '../admin-panel.module';
 import { CategoryFeatureComponent } from './AddProduct/category-feature/category-feature.component';
+import { BannerImagesComponent } from './AddProduct/banner-images/banner-images.component';
 
 
 @NgModule({
-   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, CategoryFormComponent, ProductFormComponent, CategoryFeatureComponent],
+   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, CategoryFormComponent, ProductFormComponent, CategoryFeatureComponent, BannerImagesComponent],
    imports: [
       CommonModule,
       FlexLayoutModule,

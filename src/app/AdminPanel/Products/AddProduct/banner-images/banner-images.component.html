@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Banner Images</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-upload-images #uploadImage [imagesList]="selectedImages"
+        (imagesEvent)="receiveImages($event)" (deletedImages)="receiveDeletedImages($event)">
+      </app-upload-images>
+  
+      <div class="image-details" *ngFor="let image of selectedImages; let i = index">
+        <mat-form-field appearance="fill">
+          <mat-label>Priority</mat-label>
+          <input matInput type="number" [(ngModel)]="image.priority" placeholder="Priority" disabled>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Text Search</mat-label>
+          <input matInput type="text" [(ngModel)]="image.textSearch" placeholder="Text Search">
+        </mat-form-field>
+      </div>
+  
+      <button class="btn btn-success btn-md btn-block" (click)="submitImages()">Submit</button>
+    </mat-card-content>
+  </mat-card>
+  
+
+  <div class="spinner-container" *ngIf="loading">
+    <mat-spinner class="custom-spinner"></mat-spinner>
+  </div>

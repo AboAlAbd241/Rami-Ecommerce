@@ -45,6 +45,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
   deletedImagesList = [];
   colorsList = [];
+  storageOptionsList = [];
+  productFeaturesList = [];
 	productDate: any;
 
 
@@ -54,22 +56,30 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
     private router : Router, private httpReq : HttpRequestService,
     private activeRoute: ActivatedRoute) {
 
-    this.productForm = this.fb.group({
-      productName: ['',Validators.required],
-      price: ['' ,Validators.required],
-      oldPrice: [''],
-      shortDescription: [''],
-      stock: [true],
-      brand: ['' ],
-      category: ['',Validators.required],
-      isMultipleColor: [false],
-      numberOfColor: [''],
-      colors: this.fb.array([]),
-      selectedImages:  [[],Validators.required],
-    });
+      this.productForm = this.fb.group({
+        productName: ['',Validators.required],
+        price: ['' ,Validators.required],
+        oldPrice: [''],
+        shortDescription: [''],
+        stock: [true],
+        brand: ['' ],
+        category: ['',Validators.required],
+        isMultipleColor: [false],
+        numberOfColor: [''],
+        selectedImages:  [[]],
+        hasMultipleStorage: [false], 
+        storage: this.fb.array([]), 
+        ourChoice: [false],
+        newArrival: [false],
+        bestSeller: [false],
+        isTable: [false],
+        categoryFeatures: this.fb.array([]), 
+  });
 
 
   }
+
+
 
 
   ngOnInit(): void {
@@ -79,9 +89,10 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
         this.productDate = params;
         this.selectedImages =  params.images.length > 0 ? JSON.parse(params.images) : [];
         this.colorsList = params.colorsObj.length > 0 ? JSON.parse(params.colorsObj) : [];
+        this.productFeaturesList = params.productFeatures && params.productFeatures.length > 0 ? JSON.parse(params.productFeatures) : [];
+        this.storageOptionsList = params.storageOptions && params.storageOptions.length > 0 ? JSON.parse(params.storageOptions) : [];
       }
     });
-  
 
 
     var payload = {
@@ -101,7 +112,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
         //get category
         for(const categorey of data.categories){
-          this.categoryType.push({value : categorey.englishName, id : categorey.id })
+          this.categoryType.push({value : categorey.englishName, id : categorey.id, features: categorey.features });
         }
 
         //get Brands
@@ -143,6 +154,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 
         setTimeout(() => {
     
+          
           this.productForm = this.fb.group({
             productName: [this.productDate.name,Validators.required],
             price: [this.productDate.price ,Validators.required],
@@ -155,9 +167,19 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
             numberOfColor: [this.productDate?.numberOfColor],
             descriptionType:this.fb.control('text'),
             colors: this.productDate.colors.length > 0 ? this.fb.array(this.productDate.colors) : this.fb.array([]),
-            selectedImages:  [[],Validators.required],
+            selectedImages:  [[]],
+            hasMultipleStorage: [false], 
+            storage: this.fb.array([]),  
+            ourChoice: [this.productDate.ourChoice == 'true'],
+            newArrival: [this.productDate.newArrival == 'true'],
+            bestSeller: [this.productDate.bestSeller == 'true'],
+            isTable: [this.productDate.table == 'true'],
+            categoryFeatures: this.fb.array([]), 
+            
           });
     
+          this.updateProductFeature(this.productFeaturesList);
+          this.updateStorage(this.storageOptionsList)
         });
       
       }
@@ -203,6 +225,45 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
   get numberOfColor(){
     return this.productForm.get('numberOfColor') as FormGroup
   }
+
+  get storage(): FormArray {
+    return this.productForm.get('storage') as FormArray;
+}
+
+addStorage() {
+    const storageGroup = this.fb.group({
+        storageSize: ['', Validators.required],
+        additionalPrice: ['', Validators.required],
+        id: ['']
+    });
+
+    this.storage.push(storageGroup);
+}
+
+removeStorage(index: number) {
+  this.storage.removeAt(index);
+}
+
+//for Update Product
+updateStorage(data) {
+
+  if(data && data.length > 0){
+    data.forEach(item =>{
+
+      const storageGroup = this.fb.group({
+        storageSize: [item.storageSize, Validators.required],
+        additionalPrice: [item.additionalPrice, Validators.required],
+        id: [item.id]
+    });
+
+    this.storage.push(storageGroup);
+    
+  });
+  this.productForm.get('hasMultipleStorage').setValue(true); 
+  this.cdr.detectChanges();
+  }
+}
+
 
   format(str){
     if(str){
@@ -274,8 +335,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    for(let i = 0; i < this.colors.length; i++){
-      if(this.colorsList && this.colorsList.length > i){
+    if (this.productForm.invalid) {
+      this.openSnackBar('Please Fill the fields','error');
+      return;
+    }
+
+
+    for(let i = 0; i < this.colors?.length; i++){
+      if(this.colorsList && this.colorsList?.length > i){
         this.colorsList[i].color = this.colors.value[i]
       }else{
         this.colorsList.push({
@@ -285,6 +352,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
       }
       }
 
+      
     const requestBody = {
       id: this.productDate && this.productDate.id ? this.productDate.id : '' ,
       productName: this.productForm.value.productName,
@@ -298,10 +366,13 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
       productImages: this.selectedImages,
       deletedImages: this.deletedImagesList,
       colors: this.productForm.get('isMultipleColor').value ? this.colorsList : [],
-      
+      storageOptions: this.productForm.value.hasMultipleStorage ? this.productForm.value.storage : [],
+      ourChoice: this.productForm.value.ourChoice,
+      newArrival: this.productForm.value.newArrival,
+      bestSeller: this.productForm.value.bestSeller,
+      checkTable: this.productForm.value.isTable,
+      productFeatures: this.productForm.value.categoryFeatures,
       };
-
-
 
     var payload = {
       apiName: 'updateProduct',
@@ -371,9 +442,64 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
             numberOfColor: [''],
             tableDescription:this.fb.array([]),
             colors: this.fb.array([]),
-            selectedImages:  [[],Validators.required],
+            selectedImages:  [[]],
+            hasMultipleStorage: [false], // Add this line
+            storage: this.fb.array([]),  // And this line
+            ourChoice: [false],
+            newArrival: [false],
+            bestSeller: [false],
+            isTable: [false],
+            categoryFeatures: this.fb.array([]), 
           });
   }
+
+  //this method for update product
+  updateProductFeature(data){
+
+    const categoryFeatures = this.productForm.get('categoryFeatures') as FormArray;
+    categoryFeatures.clear();
+    if(data && data.length > 0){
+      data.forEach(feature => {
+        let formGroup = this.fb.group({
+          categoryFeatureId: feature.categoryFeatureId,
+          key: feature.key,
+          values: [feature.values],
+          value: feature.value, // This will hold the selected value
+
+        });
+        categoryFeatures.push(formGroup);
+      });
+    }
+    this.cdr.detectChanges();
+
+  }
+
+
+  onCategoryChange(event) {
+    let features = this.categoryType.filter(item => {
+      if(item.id == event.value){
+        return item.features;
+      }
+    });
+  
+    const categoryFeatures = this.productForm.get('categoryFeatures') as FormArray;
+    categoryFeatures.clear();
+    if(features[0]){
+      features[0].features.forEach(feature => {
+        let formGroup = this.fb.group({
+          categoryFeatureId: feature.id,
+          key: feature.key,
+          values: [feature.values],
+          value: '', // This will hold the selected value
+
+        });
+        categoryFeatures.push(formGroup);
+      });
+    }
+    this.cdr.detectChanges();
+  }
+  
+  
 
   ngOnDestroy() {
     if (this.subscription) {

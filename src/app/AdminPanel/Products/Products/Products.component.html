@@ -85,7 +85,7 @@
                             <ng-container matColumnDef="image">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Image</th>
                               <td class="text-nowrap team-images-wrap py-3 px-3" mat-cell *matCellDef="let element">
-                                 <img class="img-circle inline-block" src="{{getFirstImage(element?.images)}}" width="30" height="30">  
+                                 <img class="img-circle inline-block" src="{{element?.thumbnailsImage}}" [alt]="getFirstImage(element?.images)" width="30" height="30">  
                               </td>
                            </ng-container> 
                            <ng-container matColumnDef="name">
@@ -107,7 +107,7 @@
                            </ng-container>
                            <ng-container matColumnDef="old_price">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Old price</th>
-                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">${{element?.oldPrice}}</td>
+                              <td class="text-nowrap px-3" mat-cell *matCellDef="let element">{{element.price|currency}}</td>
                            </ng-container>
                            <ng-container matColumnDef="price">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
@@ -142,15 +142,15 @@
          <div fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100" *ngFor="let product of productsGrid; let i=index;">
             <mat-card class="product-card">
                <a class="p-link">
-                     <img width="626" height="800" mat-card-image [src] ="getFirstImage(product?.images)" alt="Photo of a Shiba Inu">
+                     <img width="626" height="800" mat-card-image [src] ="product?.thumbnailsImage" [alt]="getFirstImage(product?.images)">
                </a>
                <div class="wishlist-icon">
                   <a (click)="deleteProduct(i, product.id, product?.images)"><mat-icon> delete </mat-icon></a>
                </div>
                <!-- wishlist-icon-->
                <mat-card-content class="product-content relative">
-                  <h5><a class="title-link">{{product?.name}}</a> </h5>
-                  <p class="category-wrap mb-2">{{product?.category}}</p>
+                  <h6 class="product-title">{{product?.name}}</h6>
+                  <p class="category-wrap mb-2">{{product?.categories[0]?.englishName}}</p>
                   <div class="product-price">
                      <div fxFlex fxLayoutAlign="space-between">
                         <h6 class="accent-color">{{product?.price | currency}}</h6>
@@ -162,6 +162,7 @@
                   </div>
                   <!-- m-icon -->
                </mat-card-content>
+               
                <!-- product-content -->
             </mat-card>
          </div>

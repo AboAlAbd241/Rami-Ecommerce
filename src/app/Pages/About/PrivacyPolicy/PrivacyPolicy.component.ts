@@ -8,12 +8,9 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 })
 export class PrivacyPolicyComponent implements OnInit {
 
-   privacyPolicyData : any;
-
-   constructor(public embryoService : EmbryoService) { }
+   constructor() { }
 
    ngOnInit() {
-      this.embryoService.getPrivacyPolicy().valueChanges().subscribe(res => {this.privacyPolicyData = res});
    }
 
 }

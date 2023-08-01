@@ -69,7 +69,7 @@
             <h4>Please Select Category</h4>
             <mat-form-field appearance="fill">
                 <mat-label>Type ...</mat-label>
-                <mat-select  formControlName="category">
+                <mat-select  formControlName="category" (selectionChange)="onCategoryChange($event)">
                     <mat-option *ngFor="let type of categoryType" [value]="type.id">
                         {{type.value}}
                     </mat-option>
@@ -78,6 +78,18 @@
         </div>
   
     </div>
+
+    <div class="row">
+        <div formArrayName="categoryFeatures" *ngFor="let feature of productForm.get('categoryFeatures').controls; let i = index">
+          <div [formGroupName]="i">
+            <label>{{feature.get('key').value}}:</label>
+            <mat-radio-group formControlName="value">
+              <mat-radio-button *ngFor="let val of feature.get('values').value" [value]="val">{{val}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>          
+      </div>
+      
   
   
     <div class="row mt-4">
@@ -122,7 +134,38 @@
             </div>
         </div>
     </div>
+
+    <div formArrayName="storage" *ngIf="productForm.get('hasMultipleStorage').value">
+        <div *ngFor="let storage of storage.controls; let i=index" [formGroupName]="i" class="storage-row mt-5">
+          <mat-form-field appearance="outline" class="storage-field">
+            <mat-label>Storage Size</mat-label>
+            <input formControlName="storageSize" matInput>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="storage-field">
+            <mat-label>Storage Price</mat-label>
+            <input formControlName="additionalPrice" matInput type="number">
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeStorage(i)">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+        <div class="add-storage-row">
+          <button type="button"  mat-raised-button color="primary" (click)="addStorage()">
+            <mat-icon>add</mat-icon>
+            Add Storage
+          </button>
+        </div>
+      </div>
+      
+      <mat-checkbox formControlName="hasMultipleStorage" class="mt-5">Has Multiple Storage</mat-checkbox>
+      
   
+      <div class="checkbox-container mt-5">
+        <mat-checkbox formControlName="ourChoice">Our Choice</mat-checkbox>
+        <mat-checkbox formControlName="newArrival">New Arrival</mat-checkbox>
+        <mat-checkbox formControlName="bestSeller">Best Seller</mat-checkbox>
+        <mat-checkbox formControlName="isTable">Is Table</mat-checkbox>
+      </div>
   
     <!-- description -->
     <div  class="mt-4" style="border-style: solid; border-width:1px; border-color: rgb(185 185 185);padding: 14px; border-radius: 25px;">
@@ -170,14 +213,14 @@
   
   
     </div>
-<!--   
+  
     <div class="row">
         <div class="col">
             <p>Form Value: {{format(productForm.value)}}</p>
         </div>
     </div>
   
-    <div class="row">
+    <!-- <div class="row">
         <div class="col">
             <p>Image value: {{format(selectedImages)}}</p>
         </div>

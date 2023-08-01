@@ -14,6 +14,7 @@ export class ApiListService {
     getCategoryAndBrands :"/get-category-and-brands",
     getProductAdmin:"/admin-get-product",
     getCategory:"/get-category",
+    getBanners:"/get-banners",
 
     // auth req 
     addProduct : "/admin/add-product",
@@ -21,6 +22,7 @@ export class ApiListService {
     deleteProduct: "/admin/delete-product",
     updateProduct: "/admin/update-product",
     saveCategoryFeature:"/admin/save-category-feature",
+    updateBanner: "/admin/update-banner",
   };
 
 

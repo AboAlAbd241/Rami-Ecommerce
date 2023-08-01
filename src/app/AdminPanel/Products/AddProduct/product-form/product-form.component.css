@@ -87,3 +87,60 @@ mat-form-field{
     }
   }
   
+
+  .storage-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .storage-field {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .add-storage-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+  .checkbox-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Encapsulate feature fields */
+div[formArrayName="categoryFeatures"] {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #F6F6F6; /* light grey */
+}
+
+/* Styling for the individual feature group */
+div[formGroupName] {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+/* Feature name label styling */
+div[formGroupName] > label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Styling for the radio button group */
+mat-radio-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Styling for individual radio button */
+mat-radio-button {
+  margin-right: 10px;
+}

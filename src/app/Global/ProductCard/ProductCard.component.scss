@@ -1,0 +1,39 @@
+.mat-card-image {
+    text-align: center;
+    width: calc(75% + 0px);
+    display: block;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.product-title {
+    height: 3.5em; /* Adjust this value as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // white-space: nowrap;
+  }
+
+  .product-image {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.7s ease;
+  }
+  
+  .default-image {
+    opacity: 1;
+  }
+  
+  .hover-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  
+  .product-card:hover .hover-image {
+    opacity: 1;
+  }

@@ -3,27 +3,40 @@
     <div class="container">
       <div class="footer-top-v1">
         <div fxLayout="row wrap" class="col-gap">
-          <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="40" fxFlex.lg="40" fxFlex.xl="40">
-            <h6>About Company</h6>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam quo nesciunt pariatur laboriosam
-              accusantium? Doloremque fugit
-              unde explicabo consequuntur aliquid laudantium id voluptatum? Saepe earum, suscipit ex quos eius natus.
-            </p>
+          <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <h5>الموقع</h5>
+            <a href="https://www.google.com/maps?q=31.892634287358494,35.87499165180214" target="_blank">
+              <i class="fas fa-map-marker-alt"></i>&nbsp; 
+              شارع الجامعه, عمارة رقم 80 بجانب مسجد الإيمان</a>
+
+              
+          </div>
+
+          <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <h5>إتصل بنا</h5>
+
+              <p><i class="far fa-clock"></i>&nbsp; من الأحد إلى الأربعاء (9:00 AM - 11:00 PM) <br>
+                من الخميس إلى السبت (9:00 AM - 3:00 PM)
+              </p>
+
+              <br>
+
+              <p>للمبيعات: </p>
+            <p><i class="fas fa-phone"></i>&nbsp; 00962-790916516</p>
           </div>
           
-          <div fxFlex.xs="100" fxFlex.sm="25" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15" *ngFor="let menu of menuItems.getFooterOneMenu()">
+          <div fxFlex.xs="100" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25" *ngFor="let menu of menuItems.getFooterOneMenu()">
             <div>
-              <p>{{menu.name | translate}}</p>
+              <h5>{{menu.name | translate}}</h5>
               <mat-list class="list-sm" *ngFor="let subMenu of menu.children">
                 <mat-list-item *ngIf="subMenu.type == 'link'"><a [routerLink]="['/'+subMenu.state]" routerLinkActive="active-link"> {{subMenu.name | translate}}</a></mat-list-item>
-                <mat-list-item *ngIf="subMenu.type == 'social_link'"><a href="{{subMenu.state}}" target="_blank"> {{subMenu.name | translate}}</a></mat-list-item>
+                <mat-list-item *ngIf="subMenu.type == 'social_link'"><a href="{{subMenu.state}}" target="_blank"> {{subMenu.name | translate}} &nbsp; <i class={{subMenu.icon}}></i> </a></mat-list-item>
               </mat-list>
             </div>
           </div>
         </div>
       </div>
-      <hr>
+      <!-- <hr>
       <div class="footer-bottom-v1">
         <div fxLayout='row wrap' class="col-gap">
           <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50">
@@ -33,7 +46,7 @@
             &copy; All Rights Reversed | Made With Love by IRON NETWORK for better Web
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </footer>

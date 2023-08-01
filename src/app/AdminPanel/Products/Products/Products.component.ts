@@ -106,6 +106,15 @@ export class ProductsComponent implements OnInit {
 			data.images = JSON.stringify(data.images);
 		}
 
+		if(data.productFeatures && data.productFeatures.length > 0){
+			data.productFeatures = JSON.stringify(data.productFeatures);
+		}
+
+		
+		if(data.storageOptions && data.storageOptions.length > 0){
+			data.storageOptions = JSON.stringify(data.storageOptions);
+		}
+
 		this.router.navigate(['/admin-panel/product-edit',data.id],{ queryParams: data});
 	}
 

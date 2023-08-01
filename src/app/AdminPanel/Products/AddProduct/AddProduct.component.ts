@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddProductComponent implements OnInit {
 
-  productType = [{value : "category"},{value : "featurCategory"}, {value : "brand"},{value : "product"}];
+  productType = [{value : "category"},{value : "featur Category"}, {value : "brand"},{value : "product"},{value : 'banner'}];
   selectedType = null;
 
 
@@ -22,7 +22,8 @@ export class AddProductComponent implements OnInit {
       return 'categoryFrom';
     }
     else if(this.selectedType == 'product') return 'productForm';
-    else if(this.selectedType == 'featurCategory') return 'featurCategory';
+    else if(this.selectedType == 'featur Category') return 'featur Category';
+    else if(this.selectedType == 'banner') return 'banner';
     return '';
   }
 
