@@ -12,6 +12,7 @@ export class HeaderThreeComponent implements OnInit {
    cartProducts     : any;
    popupResponse    : any;
    wishlistProducts : any;
+   showSearch           =  false;
 
    constructor(public embryoService: EmbryoService) { }
 
@@ -26,6 +27,7 @@ export class HeaderThreeComponent implements OnInit {
    public toggleSearch() {
       document.querySelector('app-main').classList.toggle('form-open');
    }
+   
 
    public openConfirmationPopup(value:any) {
       let message = "Are you sure you want to delete this product?";

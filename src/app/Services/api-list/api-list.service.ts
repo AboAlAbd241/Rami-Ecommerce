@@ -15,6 +15,10 @@ export class ApiListService {
     getProductAdmin:"/admin-get-product",
     getCategory:"/get-category",
     getBanners:"/get-banners",
+    getProductById:"/get-product-by-id",
+    getProductByTextSearch:"/get-product-by-name",
+    getMainProducts:"/get-main-products",
+    createAnOrder:"/create-order",
 
     // auth req 
     addProduct : "/admin/add-product",
@@ -23,6 +27,10 @@ export class ApiListService {
     updateProduct: "/admin/update-product",
     saveCategoryFeature:"/admin/save-category-feature",
     updateBanner: "/admin/update-banner",
+    getOrders: "/admin/get-orders",
+    getOrderById:"/admin/get-order",
+    updateOrder:"/admin/update-order",
+    getReport:"/admin/get-report",
   };
 
 

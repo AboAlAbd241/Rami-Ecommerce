@@ -1,0 +1,60 @@
+// /* Universal Styling */
+// // mat-form-field {
+// //   width: 100%; /* Ensuring the form field takes up the full width */
+// // }
+
+// /* Dropdown Styling */
+// .sortby-dropdown {
+//   display: flex;
+//   align-items: center; /* Vertically align items to the middle */
+//   justify-content: space-between; /* Distribute items evenly with space in between */
+// }
+
+// .status{
+//   padding-left: 20px;
+// }
+
+// // mat-select {
+// //   width: 100%;
+// //   font-size: 14px; /* Adjust based on your preference */
+// // }
+
+// /* Date Range Picker Styling */
+// mat-date-range-input {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
+// input[matStartDate], input[matEndDate] {
+//   flex: 1; /* This ensures each input occupies half the space, excluding the gap */
+//   margin-right: 8px; /* Gap between the two inputs */
+// }
+
+// mat-datepicker-toggle {
+//   margin-left: 8px; /* A little space before the toggle button */
+// }
+
+// /* Flex-Layout enhancements (Optional) */
+// [fxLayoutGap] > *:not(:last-child) {
+//   margin-right: 2rem; /* 2rem is the gap, adjust as per your liking */
+// }
+
+
+// /* Button styling */
+// button {
+//   padding: 0.5rem 1rem; /* Padding for a rectangular button */
+//   border: none; /* Removing any default border */
+//   border-radius: 4px; /* Mildly rounded corners */
+//   font-size: 1rem; /* Suitable font size */
+//   cursor: pointer; /* Hand cursor on hover */
+//   transition: background-color 0.3s ease; /* Transition effect for hover */
+//   margin-left:60px;
+// }
+
+
+
+
+/* Ensuring no outline appears on focus, you can retain it if you want to */
+button:focus {
+  outline: none;
+}

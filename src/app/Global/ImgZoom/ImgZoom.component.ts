@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, ViewChild, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
 import { trigger, transition, useAnimation } from '@angular/animations';
 
 @Component({
@@ -13,7 +13,7 @@ export class ImgZoomComponent implements OnInit {
    _triggerAnimationIn = false;
    notFirstTime = false;
 
-   constructor(private renderer: Renderer2, private el: ElementRef) { }
+   constructor(private renderer: Renderer2, private el: ElementRef,private cdRef: ChangeDetectorRef) { }
 
    @ViewChild('img') imgElmRef: ElementRef;
    @ViewChild('result') resultElmRef: ElementRef;
@@ -41,12 +41,32 @@ export class ImgZoomComponent implements OnInit {
       this.img = this.imgElmRef.nativeElement;
       this.result = this.resultElmRef.nativeElement;
       this.container = this.containerElmRef.nativeElement;
+      this.lens = this.el.nativeElement.querySelector('.img-zoom-lens');
 
-      this.renderer.setAttribute(this.img, 'style', <string>this.imgStyle);
-      this.renderer.setAttribute(this.result, 'style', <string>this.resultStyle);
-      this.renderer.setAttribute(this.container, 'style', <string>this.containerStyle);
-      this.imageZoom();
+
+      // this.renderer.setAttribute(this.img, 'style', <string>this.imgStyle);
+      // this.renderer.setAttribute(this.result, 'style', <string>this.resultStyle);
+      // this.renderer.setAttribute(this.container, 'style', <string>this.containerStyle);
+      // this.renderer.setStyle(this.result, 'backgroundImage', "url('" + this.imgSrc + "')");
+
       this.renderer.setStyle(this.lens, 'visibility', 'hidden');
+
+    //   this.renderer.listen(this.img, 'mouseover', () => {
+    //     this.hide = false;
+    //     this.renderer.setStyle(this.lens, 'visibility', 'visible');
+    //     this.renderer.setStyle(this.result, 'visibility', 'visible');
+    // });
+    
+    // this.renderer.listen(this.img, 'mouseout', () => {
+    //     this.hide = true;
+    //     this.renderer.setStyle(this.lens, 'visibility', 'hidden');
+    //     this.renderer.setStyle(this.result, 'visibility', 'hidden');
+    // });
+    //   this.imageZoom();
+
+      this.cdRef.detectChanges();
+
+    
    }
 
 
@@ -136,5 +156,7 @@ export class ImgZoomComponent implements OnInit {
       y = y - window.pageYOffset;
       return {x : x, y : y};
    }
+
+
 
 }

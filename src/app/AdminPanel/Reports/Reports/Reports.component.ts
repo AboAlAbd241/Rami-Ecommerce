@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
+import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
 
 @Component({
 	selector: 'app-reports',
@@ -19,14 +20,16 @@ export class ReportsComponent implements OnInit {
 
    displayedExpenseColumns : string [] = ['itmNo','date', 'type','companyName','amount','status'];
 
-   constructor(private service : AdminPanelServiceService) {
+	subscription : any ;
+
+
+   constructor(private service : AdminPanelServiceService,
+      private httpReq : HttpRequestService) {
    }
 
    ngOnInit() {
-      this.service.getTableTabContent().valueChanges().subscribe(res => this.tableTabData = res);
-      this.service.getBuySellChartContent().valueChanges().
-            subscribe( res => (this.getChartData(res))
-                     );
+      // this.service.getTableTabContent().valueChanges().subscribe(res => this.tableTabData = res);
+      this.getReportData();
 
    }
 
@@ -45,4 +48,35 @@ export class ReportsComponent implements OnInit {
          }
       }
    }
+
+   public getReportData() {
+
+      let body = {
+         status: "PAID",
+     };
+
+      var payload = {
+         apiName: 'getReport',
+         body: body,
+         method: 'POST'
+         };
+      
+         this.subscription = this.httpReq.makeHttpRequest(payload)
+         .subscribe(
+         data => {
+            this.getChartData(data)
+         },
+         error => {
+            // Handle the subscription error here
+            console.error('An error occurred:', error);
+         }
+         );
+   }
+
+   
+   ngOnDestroy() {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+    }
 }

@@ -17,7 +17,7 @@
          <div class="buttongroup mt-3 mb-3 text-right">
             <button class="mb-2 mr-2" mat-raised-button color="accent" (click)="chartDataChange('week')">Week</button>
             <button class="mb-2 mr-2" mat-raised-button color="primary" (click)="chartDataChange('month')">Month</button>
-            <button class="mb-2 mr-2" mat-raised-button color="warn" (click)="chartDataChange('year')">Year</button>
+            <!-- <button class="mb-2 mr-2" mat-raised-button color="warn" (click)="chartDataChange('year')">Year</button> -->
          </div>
          <div class="trade-chart-wrap" *ngIf="chartData">
             <app-buy-sell-chart [color]="chartData.buySellChartColors" [data]="chartData.buySellChartData" [label]="chartData.buySellChartLabel"></app-buy-sell-chart>
@@ -187,7 +187,7 @@
    </mat-card>
 </ng-container> 
 <ng-template #empty>
-   <h5 class="ml-5">No data found</h5>
+   <!-- <h5 class="ml-5">No data found</h5> -->
 </ng-template>
 <mat-menu #options="matMenu" x-position="before">
    <button mat-menu-item>

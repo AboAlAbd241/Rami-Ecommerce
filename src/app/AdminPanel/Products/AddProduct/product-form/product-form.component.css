@@ -144,3 +144,124 @@ mat-radio-group {
 mat-radio-button {
   margin-right: 10px;
 }
+.color-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.rounded-circle {
+  border-radius: 50%;
+}
+
+.color-checkbox {
+  margin-left: 10px;
+}
+
+
+/*  */
+
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Spacing for form elements */
+div[formArrayName],
+div[formGroupName] {
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.specefication {
+  background-color: #568dc8; /* Primary color */
+  color: #fff;
+}
+.speceficationRemove{
+  background-color: #ec4747; /* Primary color */
+  color: #fff;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darken primary color on hover */
+}
+
+button:active {
+  transform: scale(0.98); /* Subtle "push" effect on active */
+}
+
+mat-label {
+  font-weight: 500;
+}
+
+/* Specifications section */
+div[formArrayName="specifications"] {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+/* Key-Value Pair section */
+div[formGroupName] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Separator for different sections */
+div[formGroupName]:not(:last-child) {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+/* Flex adjustments */
+div[formArrayName="keyValuePairs"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Make sure everything is centered */
+.d-flex {
+  align-items: center;
+}
+
+/* Final touch: subtle transitions for interactive elements */
+input, button, mat-select {
+  transition: all 0.3s ease-in-out;
+}
+
+/* input:focus, mat-select:focus {
+  border-color: #114b88;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+} */
+
+.color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.color-field {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.checkbox-and-delete {
+  display: flex;
+  align-items: center;
+}
+
+mat-checkbox {
+  margin-right: 20px;
+}
+
+.add-color-row {
+  margin-top: 15px;
+}

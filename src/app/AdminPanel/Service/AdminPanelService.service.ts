@@ -5,6 +5,7 @@ import { DeleteListDialogComponent} from '../Widget/PopUp/DeleteListDialog/Delet
 import { SeeListDialogComponent } from '../Widget/PopUp/SeeListDialog/SeeListDialog.component';
 import { AddNewUserComponent } from '../Widget/PopUp/AddNewUser/AddNewUser.component';
 import { AngularFireDatabase, AngularFireObject } from "@angular/fire/compat/database";
+import { ToastOptions, ToastaConfig, ToastaService } from 'ngx-toasta';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,27 @@ export class AdminPanelServiceService {
 
 	constructor(private http:HttpClient,
 					private dialog: MatDialog,
-					private db: AngularFireDatabase) { }
+					private db: AngularFireDatabase,
+					private toastyService: ToastaService,
+					private toastyConfig: ToastaConfig) { 
+
+		this.toastyConfig.position = "top-right";
+		this.toastyConfig.theme = "material";
+
+	}
+
+
+	public toastMessage(title , msg){
+		let toastOption: ToastOptions = {
+			title: title,
+			msg: msg,
+			showClose: true,
+			timeout: 1500,
+			theme: "material"
+		};
+
+		this.toastyService.wait(toastOption);
+	}
 
 	/*
 		---------- Pop Up Function ----------
@@ -70,9 +91,11 @@ export class AdminPanelServiceService {
 	}
 
 	//seeList function is used to open the see Dialog Component.
-	seeList(){
+	seeList(id : any =''){
 		let dialogRef : MatDialogRef<SeeListDialogComponent>;
-		dialogRef = this.dialog.open(SeeListDialogComponent);
+		dialogRef = this.dialog.open(SeeListDialogComponent,{
+			data: { id: id }
+		});
 	}
 
 	//addNewUserDialog function is used to open Add new user Dialog Component.

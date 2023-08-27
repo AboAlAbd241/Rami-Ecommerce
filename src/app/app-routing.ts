@@ -21,7 +21,7 @@ export const AppRoutes : Routes = [
       children: [ 
          {
             path : 'home',
-            component : HomeoneComponent
+            component : HomeThreeComponent
          },
          {
             path : 'home-two',

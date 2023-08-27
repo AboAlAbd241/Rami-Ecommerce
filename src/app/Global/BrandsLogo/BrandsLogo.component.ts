@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 import { EmbryoService } from '../../Services/Embryo.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'embryo-BrandsLogo',
@@ -15,7 +16,7 @@ export class BrandslogoComponent implements OnInit, OnChanges {
 
    @Input() brandsLogoArray : any;
 
-   constructor(public embryoService : EmbryoService) { }
+   constructor(public embryoService : EmbryoService, private router: Router) { }
 
    ngOnInit() {
    }
@@ -54,5 +55,10 @@ export class BrandslogoComponent implements OnInit, OnChanges {
    }
 
    
+
+   public openProductList(brand){
+      const data = {type : "brandSearch", id : brand.id};
+      this.router.navigate(['/products',brand.englishName],{ queryParams: data});
+   }
 
 }

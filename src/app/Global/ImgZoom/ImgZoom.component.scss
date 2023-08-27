@@ -1,23 +1,24 @@
-* {box-sizing: border-box;}
-
 .img-zoom-container {
-  position: absolute;
+  position: relative;
 }
 
 .img-zoom-lens {
   position: absolute;
   border: 1px solid #d4d4d4;
-  /*set the size of the lens:*/
+  cursor: none;
+  /* You can set the width and height, or use the lensStyle input. */
   width: 40px;
   height: 40px;
-  display: none;
 }
 
 .img-zoom-result {
   border: 1px solid #d4d4d4;
-  /*set the size of the result div:*/
+  /* You can set the width and height, or use the resultStyle input. */
   width: 300px;
   height: 300px;
+  position: absolute;
+  top: 0;
+  left: 105%; /* this will position the zoomed result to the right of the image */
 }
 
 .hide {

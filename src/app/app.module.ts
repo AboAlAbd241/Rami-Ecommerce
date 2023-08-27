@@ -70,7 +70,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { AdminPanelModule } from './AdminPanel/admin-panel.module';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -150,7 +150,8 @@ export function createTranslateLoader(http: HttpClient) {
 		}),
 		SlickCarouselModule,
 		PerfectScrollbarModule,
-		AdminPanelModule
+		AdminPanelModule,
+		MatAutocompleteModule
   ],
 	providers: [
 		MenuItems,

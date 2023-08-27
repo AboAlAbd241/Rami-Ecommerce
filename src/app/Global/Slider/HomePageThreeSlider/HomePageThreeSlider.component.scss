@@ -76,10 +76,10 @@
 
 /* Rotate the border to look like arrow pointing right for prev in RTL */
 :host ::ng-deep .slick-prev::before {
-    transform: rotate(-135deg);
+    transform: rotate(45deg);
 }
 
 /* Rotate the border to look like arrow pointing left for next in RTL */
 :host ::ng-deep .slick-next::before {
-    transform: rotate(45deg);
+    transform: rotate(-135deg);
 }

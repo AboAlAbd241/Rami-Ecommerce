@@ -1,5 +1,6 @@
 import { filter } from 'rxjs';
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'embryo-ProductCard',
@@ -20,7 +21,7 @@ export class ProductCardComponent implements OnInit {
 
    @Output() addToWishlist: EventEmitter<any> = new EventEmitter();
 
-   constructor() { }
+   constructor(private router: Router) { }
 
    ngOnInit() {
       this.formatProduct();
@@ -37,12 +38,12 @@ export class ProductCardComponent implements OnInit {
       this.addToWishlist.emit(value);
    }
 
-   public checkCartAlready(singleProduct) {
-      let products = JSON.parse(localStorage.getItem("cart_item")) || [];
-      if (!products.some((item) => item.id == singleProduct.id)) {
-         return true;
-      }
-   }
+   // public checkCartAlready(singleProduct) {
+   //    let products = JSON.parse(localStorage.getItem("cart_item")) || [];
+   //    if (!products.some((item) => item.id == singleProduct.id)) {
+   //       return true;
+   //    }
+   // }
 
    formatProduct(){
       if(this.product.images.length > 1){
@@ -59,6 +60,11 @@ export class ProductCardComponent implements OnInit {
    
          this.product.secondThumbnailsImage = newPath + '/' + secondThumbnailsImage[0].imagePath.split('/').pop();
       }
+   }
+
+   openProductDetails(product){
+      const data = {categoryId : product?.categories[0]?.id};
+      this.router.navigate(['/products',product?.categories[0]?.englishName,product?.id],{ queryParams: data});
    }
 
 }

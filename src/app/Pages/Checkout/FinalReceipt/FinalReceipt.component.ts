@@ -10,13 +10,16 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 export class FinalReceiptComponent implements OnInit {
 
    deliveryDate : any;
-   products     : any;
+   // products     : any;
    userDetails  : any;
    todayDate    : any = new Date();
+   product;
 
    constructor(public embryoService: EmbryoService, public router: Router) {
       this.getDeliveryDate();
       this.userDetails = JSON.parse(localStorage.getItem("user"));
+      this.product = JSON.parse(localStorage.getItem("byProductDetails"));
+      debugger
    }
 
    ngOnInit() {

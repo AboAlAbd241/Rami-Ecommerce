@@ -1,87 +1,101 @@
 <ng-container *ngIf="pageTitle">
-<embryo-PageTitle heading="{{pageTitle}}" subHeading="{{subPageTitle}}"></embryo-PageTitle>
-<div class="inner-container section-gap">
-  <div class="container">
-	 <!-- Products with free api key  -->
-	 <ais-instantsearch [config]="config">
-		<div fxLayout="row wrap"  class="col-gap">
-		  <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="35" fxFlex.lg="25" fxFlex.xl="25">
-			 <div class="mat-card mb-4">
-				<ais-search-box placeholder="Search a product"></ais-search-box>
-			 </div>
-			 <div class="mat-card mb-4">
-				<div class="facet-category-title">Show results for</div>
-				<ais-hierarchical-menu
-				  [attributes]="['category', 'sub_category', 'sub_sub_category']"
-				  [sortBy]="['name:asc']"
-				>
-				</ais-hierarchical-menu>
-			 </div>
-			 <div class="mat-card mb-4">
-				<ais-panel header="Categories">
-				  <ais-refinement-list
-					 attribute="materials"
-					 operator="or"
-					 limit="10"
-				  >
-				  </ais-refinement-list>
-				</ais-panel>
-			 </div>
-			 <div class="mat-card mb-4">
-				  <ais-panel header="Colors">
-					 <ais-refinement-list
-						attribute="colors"
-						operator="or"
-						limit="10"
-					 >
-					 </ais-refinement-list>
-				  </ais-panel>
-				</div>
-				<div class="mat-card mb-4">
-				  <ais-panel header="Prices">
-					 <ais-range-slider attribute="price" [pips]="true" [tooltips]="true" [min]="0"></ais-range-slider>
-				  </ais-panel>
-				</div>
-				<div class="mat-card mb-4">
-				  <ais-panel header="CUSTOMER RATINGS"></ais-panel>
-				  <ais-rating-menu attribute="rating" andUpLabel=""></ais-rating-menu>
-				</div>
-				<div class="mat-card mb-4">
-				  <ais-clear-refinements buttonLabel="Clear all filters"></ais-clear-refinements>
-				</div>
-			 </div>
-			 <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="75" fxFlex.xl="75" class="algolia-main-list">
-				<ais-stats></ais-stats>
-				<ais-panel header="Sort by">
-				  <ais-sort-by
-				  [items]="[
-					 {name: 'ikea', label: 'Featured'},
-					 {name: 'ikea_price_asc', label: 'Price asc.'},
-					 {name: 'ikea_price_desc', label: 'Price desc.'}
-				  ]
-				  ">
-				  </ais-sort-by>
-				</ais-panel>
-				<ais-hits-per-page [items]="[
-					 { value: 3, label: '3 per page' },
-					 { value: 6, label: '6 per page' },
-					 { value: 12, label: '12 per page', default:true}
-				 ]"></ais-hits-per-page>
-				<ais-hits [transformItems]="transformHits">
-				  <ng-template let-hits="hits" let-results="results">
-					 <ng-container *ngIf="(hits && hits.length>0); else errorBlock">
-						<embryo-ProductGrid [currency]="embryoService?.currency" [products]="hits" (addToCart)="addToCart($event)" (addToWishList)="addToWishList($event)" gridThree=true>
-						</embryo-ProductGrid>
-					 </ng-container>
-					 <ng-template #errorBlock>
-						No Product Found.
-					 </ng-template>
-				  </ng-template>
-				</ais-hits>
-				<ais-pagination></ais-pagination>
-			 </div>
-		  </div>
-		</ais-instantsearch>
+	<div class="inner-container section-gap">
+  		<div class="container">
+
+			<div fxLayout="row wrap"  class="col-gap">
+				<!-- <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="35" fxFlex.lg="25" fxFlex.xl="25">
+
+					</div> -->
+					<div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" class="algolia-main-list">
+
+						<ng-container *ngIf="requestType == 'mainSearch'">
+							<h4 class="row"> نتائج البحث عن : {{searchObj.search}}</h4>
+
+
+							<div class="search-criteria mt-4">
+								<h4>Search criteria</h4>
+								
+								<div class="search-panel">
+									<!-- Search Input -->
+									<div class="search-box2">
+										<input type="text" placeholder="Search..." [(ngModel)]="searchObj.search">
+									</div>
+
+									<!-- Dropdown for Categories -->
+									<div class="category-dropdown">
+										<select [(ngModel)]="selectedCategory">
+											<option value="">All Categories</option>
+											<option *ngFor="let type of categoryType" [value]="type.id">{{type.value}}</option>
+										</select>
+									</div>
+
+									<!-- Search Button -->
+									<div class="search-btn-wrap">
+										<button class="search-btn" (click)="getProducts()">Search</button>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+
+							<!-- Added section for the new dropdowns -->
+							<div class="mt-4 filter-panel" *ngIf="(productList && productList.length>0)">
+								<!-- Number of Results per page -->
+								<div class="results-dropdown">
+									<select [(ngModel)]="resultsPerPage" (change)="getProducts()">
+										<option value="10">10 Results/Page</option>
+										<option value="20">20 Results/Page</option>
+										<option value="30">30 Results/Page</option>
+										<!-- ... add more options if required -->
+									</select>
+								</div>
+
+								<!-- Sort By Dropdown -->
+								<div class="sortby-dropdown" >
+									<select [(ngModel)]="sortBy" (change)="getProducts()">
+										<option value="DEFAULT">Default</option>
+										<option value="LOWER_TO_HIGHER">Sort by Price (Low to High)</option>
+										<option value="HIGHER_TO_LOWER">Sort by Price (High to Low)</option>
+										<!-- ... add more options if required -->
+									</select>
+								</div>
+							</div>
+
+							<div class="mt-4" style="border-bottom: 1px solid #eee;"></div>
+
+							<div class="products-container">
+
+							<ng-container *ngIf="(productList && productList.length>0); else errorBlock">
+								<div class="spinner"  *ngIf="isLoading">
+									<mat-progress-spinner   [mode]="'indeterminate'"></mat-progress-spinner>
+								  </div>
+								<embryo-ProductGrid *ngIf="productList" [currency]="embryoService?.currency" [products]="productList" (addToCart)="addToCart($event)" (addToWishList)="addToWishList($event)" gridThree=true>
+								</embryo-ProductGrid>
+							</ng-container>
+							</div>
+							<ng-template #errorBlock>
+								<div class="no-product-found">
+									No Product Found
+								</div>
+							</ng-template>
+							
+						
+							<div class="pagination-container" *ngIf="(productList && productList.length>0)">
+								<button mat-button (click)="changePage(0)" [disabled]="searchObj.page === 0"><i class="fa fa-angle-double-left"></i></button>
+								<button mat-button (click)="changePage(searchObj.page - 1)" [disabled]="searchObj.page === 0"><i class="fa fa-angle-left"></i></button>
+								
+								<span *ngFor="let page of displayedPages" 
+									  [class.active-page]="page - 1 === searchObj.page"
+									  (click)="changePage(page - 1)">{{ page }}</span>
+								
+								<button mat-button (click)="changePage(searchObj.page + 1)" [disabled]="searchObj.page === totalPages - 1"><i class="fa fa-angle-right"></i></button>
+								<button mat-button (click)="changePage(totalPages - 1)" [disabled]="searchObj.page === totalPages - 1"><i class="fa fa-angle-double-right"></i></button>
+							</div>
+							
+								
+					
+
+						</div>
+			</div>
 	 </div>
   </div>
 </ng-container>

@@ -1,0 +1,16 @@
+.color-display {
+    width: 30px;
+    height: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+    
+
+.color-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    height: 100%;            /* Use appropriate height */
+}
+
+

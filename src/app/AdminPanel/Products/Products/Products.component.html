@@ -9,12 +9,12 @@
          <div fxLayout="row wrap">
             <div class="form-group pr-3" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="calc(100% - 300px)" fxFlex.lg="calc(100% - 300px)" fxFlex.xl="calc(100% - 300px)">
                <mat-form-field class="w-100" floatLabel="never">
-                  <input matInput placeholder="Search Products">
+                  <input matInput placeholder="Search Products" [(ngModel)]="searchText">
                </mat-form-field>
             </div>
             <!-- form-group -->
             <div class="contact-btn" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="300px" fxFlex.lg="300px" fxFlex.xl="300px"> 
-               <button class="mr-2 mb-2" mat-raised-button color="primary">Search</button>
+               <button class="mr-2 mb-2" mat-raised-button color="primary" (click)="getProducts()">Search</button>
                <button mat-raised-button color="primary" [routerLink]="['/admin-panel/product-add']" >Add Product<mat-icon class="ml-2">add</mat-icon></button>
             </div>
             <!-- contact-btn -->
@@ -22,11 +22,10 @@
       </div>
    </div>			
 </mat-card>	
-<div class="m-3" fxLayoutAlign="space-between center">
+<!-- <div class="m-3" fxLayoutAlign="space-between center">
    <div class="title">
       <h5 class="mb-0">{{'Product' | translate }} {{showType | translate}}</h5>
    </div>
-   <!-- title -->
    <div class="product-icon">
       <button id="grid" class="active" mat-icon-button (click)="productShowType('grid')">
          <mat-icon>apps</mat-icon>
@@ -35,40 +34,41 @@
          <mat-icon>list</mat-icon>
       </button>
    </div>
-   <!-- product-icon -->
-</div>
-<div class="filter-wrap mx-3" fxLayout="row wrap" fxLayoutGap="15px">
+</div> -->
+<div class="filter-wrap mx-3 mt-3"  fxLayout="row wrap" fxLayoutGap="15px">
+   <div *ngIf="showType == 'grid'">
+      <mat-form-field>
+         <mat-label>No of Items</mat-label>
+         <mat-select [(ngModel)]="resultsPerPage" (selectionChange)="getProducts()">
+            <mat-option value="20">20</mat-option>
+            <mat-option value="30">30</mat-option>
+            <mat-option value="40">40</mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
    <div>
       <mat-form-field>
          <mat-label>Type</mat-label>
-         <mat-select>
-            <mat-option value="Men">Men</mat-option>
-            <mat-option value="Women">Women</mat-option>
-            <mat-option value="Gadgets">Gadgets</mat-option>
+         <mat-select [(ngModel)]="selectedCategory" (selectionChange)="getProducts()">
+            <mat-option value="">All Categories</mat-option>
+            <mat-option  *ngFor="let type of categoryType" [value]="type.id">{{type.value}}</mat-option>
          </mat-select>
       </mat-form-field>
    </div>
    <div>
       <mat-form-field>
-         <mat-label>Recent</mat-label>
-         <mat-select>
-            <mat-option value="This Week">This Week</mat-option>
-            <mat-option value="This Month">This Month</mat-option>
-            <mat-option value="Past Month">Past Month</mat-option>
-         </mat-select>
-      </mat-form-field>
-   </div>
-   <div>
-      <mat-form-field>
-         <mat-label>No of Items</mat-label>
-         <mat-select>
-            <mat-option value="10">10</mat-option>
-            <mat-option value="20">20</mat-option>
-            <mat-option value="30">30</mat-option>
+         <mat-label>Type</mat-label>
+         <mat-select [(ngModel)]="sortBy"  (selectionChange)="getProducts()">
+            <mat-option value="DEFAULT">Default</mat-option>
+            <mat-option value="LOWER_TO_HIGHER">Sort by Price (Low to High)</mat-option>
+            <mat-option value="HIGHER_TO_LOWER">Sort by Price (High to Low)</mat-option>
          </mat-select>
       </mat-form-field>
    </div>
 </div>
+<div class="spinner"  *ngIf="isLoading">
+   <mat-progress-spinner   [mode]="'indeterminate'"></mat-progress-spinner>
+  </div>
 <ng-container *ngIf="productsGrid && productsGrid.length > 0; else elseBlock">
    <ng-container *ngIf="showType == 'list';else gridtype">
       <div fxLayout="row wrap">
@@ -130,7 +130,7 @@
                      </div>
                   </div>   
                   <!-- product-list-tabel-->
-                  <mat-paginator [pageSizeOptions]="[15, 30, 45, 60]"></mat-paginator>
+                  <mat-paginator [length]="totalPages" [pageSize]="searchObj.size" [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
                </mat-card>
             </div>
             <!-- product-list-->
@@ -168,6 +168,19 @@
          </div>
       </div>
    </ng-template>
+
+   <div class="pagination-container"  *ngIf="productsGrid && productsGrid.length > 0 && showType =='grid'">
+      <button mat-button (click)="changePage(0)" [disabled]="searchObj.page === 0"><i class="fa fa-angle-double-left"></i></button>
+      <button mat-button (click)="changePage(searchObj.page - 1)" [disabled]="searchObj.page === 0"><i class="fa fa-angle-left"></i></button>
+      
+      <span *ngFor="let page of displayedPages" 
+           [class.active-page]="page - 1 === searchObj.page"
+           (click)="changePage(page - 1)">{{ page }}</span>
+      
+      <button mat-button (click)="changePage(searchObj.page + 1)" [disabled]="searchObj.page === totalPages - 1"><i class="fa fa-angle-right"></i></button>
+      <button mat-button (click)="changePage(totalPages - 1)" [disabled]="searchObj.page === totalPages - 1"><i class="fa fa-angle-double-right"></i></button>
+   </div>
+
 </ng-container>
 <ng-template #elseBlock >
    <h5 class="ml-5">No product found</h5>

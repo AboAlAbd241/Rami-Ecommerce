@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit} from '@angular/core';
 
 @Component({
   selector: 'embryo-ProductGrid',
@@ -30,10 +30,9 @@ export class ProductGridComponent implements OnInit {
    constructor() { }
 
    ngOnInit() {
-
       if(this.gridThree) {
-         this.lg = 33;
-         this.xl = 33;
+         this.lg = 25;
+         this.xl = 25;
       }
    }
 
@@ -58,5 +57,7 @@ export class ProductGridComponent implements OnInit {
          return true;
       }
    }
+
+
 
 }

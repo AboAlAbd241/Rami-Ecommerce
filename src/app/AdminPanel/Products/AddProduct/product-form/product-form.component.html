@@ -23,8 +23,8 @@
   
         <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
             <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label>Short Description</mat-label>
-                <input matInput placeholder="Dell Core I9 ,1T SSD"  formControlName="shortDescription">
+                <mat-label>Search </mat-label>
+                <input matInput placeholder="Dell Core I9 ,1T SSD"  formControlName="search">
               </mat-form-field>
         </div>
     </div>
@@ -47,6 +47,24 @@
       </div>
   
   </div>
+
+  <div class="row ">
+  
+    <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Quantity</mat-label>
+            <input   matInput type="number" placeholder="20"  formControlName="quantityInInventory">
+          </mat-form-field>
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12 mt-4">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Product Code</mat-label>
+            <input matInput type="text" placeholder="DEL1135D7200"  formControlName="productCode">
+          </mat-form-field>
+    </div>
+
+</div>
   
   
   
@@ -91,7 +109,7 @@
       </div>
       
   
-  
+      <!-- stock -->
     <div class="row mt-4">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <h4>Do this product available in stock ?</h4>
@@ -102,40 +120,37 @@
     </div>
   
   </div>
-  
-  
-    <div class="row mt-4">
-  
-        <div class="col-lg-6 col-md-12 col-sm-12">
-            <h4>Do this product has multiple color ?</h4>
-            <mat-radio-group formControlName="isMultipleColor" (change)="radioChange()">
-                <mat-radio-button class="me-3" [value]="true">Yes</mat-radio-button>
-                <mat-radio-button class="me-3" [value]="false" selected>No</mat-radio-button>
-            </mat-radio-group>
-        </div>
-  
-        <div class="col-lg-6 col-md-12 col-sm-12 " *ngIf="productForm.value.isMultipleColor">
-            <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label  >How many colors ?</mat-label>
-                <input  matInput placeholder="5" name="test" type="number" (keyup)="setNumberOfColor($event)" required formControlName="numberOfColor">
-            </mat-form-field>
-            <p class="text-danger" *ngIf="numberOfColor.errors?.['incorrect'] ">The maximum number is 50</p>
-  
-        </div>
-    </div>
-  
-    <div class="row" *ngIf="productForm.value.numberOfColor && productForm.value.isMultipleColor">
-        <div class="col">
-            <div formArrayName="colors">
-                <mat-label class="me-4" >Please make sure to select for all colors?</mat-label>
-                <ng-container *ngFor="let alias of colors.controls; let i=index">
-                    <input id="alias-{{ i }}"  style="width:21px;" class="rounded-circle color1 ms-3" type="color" [formControlName]="i">
-                </ng-container>
-            </div>
-        </div>
+
+
+<!-- Colors Section -->
+<div class="mt-4" formArrayName="colors" *ngIf="productForm.get('hasMultipleColors').value">
+  <h4>Colors</h4>
+  <div *ngFor="let color of colors.controls; let i=index" [formGroupName]="i" class="color-row mt-5">
+
+    <div class="color-checkbox-container">
+      <input matInput class="rounded-circle color1 ms-3" type="color"  formControlName="color">
+      <mat-checkbox class="color-checkbox" formControlName="colorAvailableInStock">Available</mat-checkbox>
+      <button mat-icon-button color="warn" (click)="removeColor(i)">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
     </div>
 
-    <div formArrayName="storage" *ngIf="productForm.get('hasMultipleStorage').value">
+
+  </div>
+  <div class="add-color-row mt-3">
+    <button type="button" mat-flat-button color="primary" (click)="addColors()">
+      <mat-icon>add</mat-icon> Add Color
+    </button>
+  </div>
+</div>
+
+<mat-checkbox formControlName="hasMultipleColors" class="mt-5">Has Multiple Colors</mat-checkbox>
+
+
+
+    <!-- Storage -->
+    <div class="mt-4" formArrayName="storage" *ngIf="productForm.get('hasMultipleStorage').value">
+        <h4>Storage </h4>
         <div *ngFor="let storage of storage.controls; let i=index" [formGroupName]="i" class="storage-row mt-5">
           <mat-form-field appearance="outline" class="storage-field">
             <mat-label>Storage Size</mat-label>
@@ -143,8 +158,13 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="storage-field">
             <mat-label>Storage Price</mat-label>
-            <input formControlName="additionalPrice" matInput type="number">
+            <input formControlName="price" matInput type="number">
           </mat-form-field>
+          <mat-form-field appearance="outline" class="storage-field">
+            <mat-label>old price</mat-label>
+            <input formControlName="oldPrice" matInput type="number">
+          </mat-form-field>
+          <mat-checkbox formControlName="available">Available</mat-checkbox>
           <button mat-icon-button color="warn" (click)="removeStorage(i)">
             <mat-icon>remove_circle</mat-icon>
           </button>
@@ -164,15 +184,14 @@
         <mat-checkbox formControlName="ourChoice">Our Choice</mat-checkbox>
         <mat-checkbox formControlName="newArrival">New Arrival</mat-checkbox>
         <mat-checkbox formControlName="bestSeller">Best Seller</mat-checkbox>
-        <mat-checkbox formControlName="isTable">Is Table</mat-checkbox>
       </div>
   
     <!-- description -->
-    <div  class="mt-4" style="border-style: solid; border-width:1px; border-color: rgb(185 185 185);padding: 14px; border-radius: 25px;">
+    <div  class="mt-4" >
         <div class="row mb-4">
   
             <div class="col mt-1">
-                <h4>Description: </h4>
+                <h4>Description</h4>
             </div>
         </div>
   
@@ -213,6 +232,39 @@
   
   
     </div>
+
+    <div class="row mt-5">
+      <!-- In your component.html -->
+
+    <div formArrayName="specifications" *ngFor="let spec of specifications?.controls; let i = index">
+      <h4>Specification</h4>
+      <div [formGroupName]="i">
+        <mat-form-field appearance="fill">
+          <mat-label>Header</mat-label>
+          <input formControlName="header" matInput>
+        </mat-form-field>
+
+        <div formArrayName="keyValuePairs">
+          <div *ngFor="let kv of spec.controls.keyValuePairs.controls; let j = index" [formGroupName]="j">
+            <mat-form-field appearance="fill">
+              <mat-label>Key</mat-label>
+              <input formControlName="key" matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Value</mat-label>
+              <textarea  formControlName="value" matInput ></textarea>
+            </mat-form-field>
+            <button mat-button class="speceficationRemove" type="button" (click)="removeKeyValuePair(spec, j)">Remove Key-Value</button>
+          </div>
+          <button mat-button class="specefication" type="button" (click)="addKeyValuePair(spec)">Add Key-Value</button>
+        </div>
+        <button mat-button class="speceficationRemove" type="button" (click)="removeSpecification(i)">Remove Specification</button>
+      </div>
+    </div>
+    <button mat-button class="specefication" type="button" (click)="addSpecification()">Add Specification</button>
+
+    </div>
+
   
     <div class="row">
         <div class="col">

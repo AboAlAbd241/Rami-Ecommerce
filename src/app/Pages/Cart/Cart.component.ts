@@ -13,7 +13,7 @@ import { EmbryoService } from '../../Services/Embryo.service';
 export class CartComponent implements OnInit, AfterViewChecked {
 
 	products       : any;
-	quantityArray  : number[] = [1,2,3,4,5,6,7,8,9,10];
+	// quantityArray  : number[] = [1,2,3,4,5,6,7,8,9,10];
 	popupResponse  : any;
 
 	constructor(public embryoService : EmbryoService,
@@ -24,6 +24,7 @@ export class CartComponent implements OnInit, AfterViewChecked {
 
 	ngOnInit() {
 		this.getProducts();
+		this.embryoService.calculateLocalCartProdCounts();
 	}
 
 	ngAfterViewChecked() : void {
@@ -31,14 +32,15 @@ export class CartComponent implements OnInit, AfterViewChecked {
 	}
 
 	getProducts(){
-		this.embryoService.getProducts().valueChanges().subscribe(res => this.getProductResponse(res));
+		// this.embryoService.getProducts()?.valueChanges().subscribe(res => this.getProductResponse(res));
+		this.getProductResponse(this.embryoService.getProducts());
 	}
 
-	//getProductResponse method is used to get the response of all products.
+	// getProductResponse method is used to get the response of all products.
 	public getProductResponse(response) {
-		this.products = null;
-		let data = ((response.men.concat(response.women)).concat(response.gadgets)).concat(response.accessories);
-		this.products = data;
+		// this.products = null;
+		// let data = ((response.men.concat(response.women)).concat(response.gadgets)).concat(response.accessories);
+		this.products = response;
 	}
 
 	public removeProduct(value:any) {
@@ -91,7 +93,7 @@ export class CartComponent implements OnInit, AfterViewChecked {
 
 	public updateLocalCartProduct() {
 		this.embryoService.updateAllLocalCartProduct(this.embryoService.localStorageCartProducts);
-		this.router.navigate(['/checkout'])
+		this.router.navigate(['/checkout/payment'])
 	}
 
 	public getQuantityValue(product) {
@@ -104,13 +106,14 @@ export class CartComponent implements OnInit, AfterViewChecked {
 
 	public onChange(value, product){
 		let price = 0;
+		product.newPrice = 0;
 		for(let data of this.products){
 			if(data.id == product.id){
 				price = data.price;
 			}
 		}
 		let newPrice = price*value;
-		product.price = newPrice;
+		product.newPrice = newPrice;
 		product.quantity = value;
 		this.embryoService.updateLocalCartProduct(product);
 	}

@@ -1,7 +1,8 @@
-<div class="pt-5">
-   <div class="container">
+<div >
+   <div >
       <ngx-slick-carousel id="myCarousel" class="carousel home-3-slider" [config]="slideConfig">
-   <div ngxSlickItem *ngFor="let slide of slides">
+   <div ngxSlickItem *ngFor="let slide of slides"
+   [routerLink]="['/products']" [queryParams]="{type : 'mainSearch', search : slide?.textSearch}">
       <div class="text-center">
          <div class="relative">
             <img class="full-size-image" [src]="slide.img" alt="">

@@ -1,5 +1,5 @@
 
-<embryo-PageTitle heading="Here’s what’s in your bag." subHeading="Our latest news and learning articles."></embryo-PageTitle>
+<!-- <embryo-PageTitle heading="Here’s what’s in your bag." subHeading="Our latest news and learning articles."></embryo-PageTitle> -->
 
 <div class="inner-container bg-white cart-page section-gap" *ngIf="(embryoService.localStorageCartProducts && embryoService.localStorageCartProducts.length>0); else elseBlock">
   <div class="container">
@@ -9,7 +9,7 @@
 			 <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="10" fxFlex.lg="20" fxFlex.xl="20" class="cart-product-image">
 				<div class="cart-item-thumb">
 				  <a href="javascript:void(0)" class="p-link">
-					 <img width="626" height="800" class="card-shadow" [src]="product.image" alt="cart image">
+					 <img width="626" height="800" class="card-shadow" [src]="product?.thumbnailsImage" [alt]="product?.images?.[0]?.imagePath || 'defaultPath'">
 				  </a>
 				</div>
 			 </div>
@@ -17,17 +17,23 @@
 				<div fxLayout='row wrap' fxLayoutAlign="center center" class="cart-product-info">
 				  <div fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="30" fxFlex.lg="40" fxFlex.xl="40">
 					 <h5>{{product?.name}}</h5>
-					 <p class="mb-0">Delivery in 3-4 days | Free</p>
-					 <p> 10 Days Replacement Policy</p>
+					 <div class="row mt-2">
+						 <div *ngIf="product?.selectedStorage?.storageSize"  class="col-6"> Selected Storage <p><b>{{product?.selectedStorage?.storageSize}}</b></p></div>
+						 <div class="col-6" *ngIf="product?.selectedColor?.color">Selected color
+							<div class="color-container">
+								<p  class="color-display " [style.background-color]="product?.selectedColor?.color"></p>
+							</div>
+						</div>
+					 </div>
 				  </div>
 				  <div fxFlex.xs="50" fxFlex.sm="20" fxFlex.md="20" fxFlex.lg="20" fxFlex.xl="20">
 					 <mat-form-field class="w-100">
-						<input  matInput type="number" #quantity [value]="getQuantityValue(product)" min="1" max="10" placeholder="Quantity" (input)="onChange($event.target.value, product)">
+						<input  matInput type="number" #quantity [value]="getQuantityValue(product)" min="1"  placeholder="Quantity" (input)="onChange($event.target.value, product)">
 					 </mat-form-field>
 				  </div>
 				  <div fxFlex.xs="50" fxFlex.sm="40" fxFlex.md="30" fxFlex.lg="20" fxFlex.xl="20">
 					 <div class="cart-item-price">
-						<h4>{{ product.price | currency:embryoService?.currency}}</h4>
+						<h4>{{ product?.newPrice | currency:embryoService?.currency}}</h4>
 					 </div>
 				  </div>
 				  <div class="close-sm" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="20" fxFlex.lg="20" fxFlex.xl="20">

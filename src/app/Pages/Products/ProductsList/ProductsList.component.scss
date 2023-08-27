@@ -1,0 +1,134 @@
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  
+    button {
+      color: #555;
+      &:disabled {
+        color: #aaa;
+        cursor: not-allowed;
+      }
+    }
+  
+    .active-page {
+      background-color: #3f51b5; // Angular Material primary color, you can adjust to your theme
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: darken(#3f51b5, 10%); // Darken the primary color on hover
+      }
+    }
+  }
+  
+  .search-criteria {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.search-panel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 850px;
+    margin-top: 1rem;
+}
+
+.search-box2 {
+    position: relative;
+    // flex-grow: 2;
+    width: 35%;
+}
+
+.search-box2 input {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+
+.category-dropdown select {
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+    cursor: pointer;
+    width: 100%;
+}
+
+.category-dropdown{
+  width: 35%;
+}
+
+
+.search-btn-wrap {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    border: none;
+    background-color: #007BFF; /* Change to your primary color */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #0056b3; /* Darkened version of your primary color */
+}
+.filter-panel {
+  display: flex;
+  gap: 10px; /* Gap between items */
+  justify-content: flex-start;
+}
+
+.results-dropdown select, 
+.sortby-dropdown select {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  transition: all 0.3s;
+}
+
+.products-container {
+  position: relative;  /* This will allow absolute positioning within this container */
+}
+
+.spinner {
+  position: absolute;  /* Absolute positioning will let it float above its siblings */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;  /* These four lines will stretch the spinner container across the entire .products-container */
+  display: flex;  /* Center spinner */
+  align-items: center; 
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white background */
+  z-index: 10;  /* This ensures the spinner appears above other content */
+}
+
+.no-product-found {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  height: 200px;           /* You can adjust the height as required */
+  width: 100%;             /* Ensures it takes up full width */
+  font-size: 1.5em;        /* Makes the text a bit larger; optional */
+  font-weight: bold;       /* Makes the text bold; optional */
+  color: #888;             /* Gives it a muted color; optional */
+}

@@ -12,9 +12,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { InvoicesComponent } from './Invoices/Invoices.component';
 import { InvoicesRoutes} from './Invoices.routing';
+import {MatSelectModule} from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DatePipe } from '@angular/common';
+
 
 @NgModule({
 	declarations: [InvoicesComponent],
+	providers: [DatePipe],
 	imports: [
 		MatIconModule,
 		MatButtonModule,
@@ -25,6 +31,9 @@ import { InvoicesRoutes} from './Invoices.routing';
       MatInputModule,
       FlexLayoutModule,
       MatPaginatorModule,
+	  MatSelectModule,
+	  FormsModule,
+	  MatDatepickerModule,
 		RouterModule.forChild(InvoicesRoutes)
 	]
 })

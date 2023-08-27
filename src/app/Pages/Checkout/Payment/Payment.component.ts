@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, UntypedFormBuilder,FormArray, Validators } from '@angular/forms';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { Router, NavigationEnd } from '@angular/router';
+import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-Payment',
@@ -13,63 +15,17 @@ export class PaymentComponent implements OnInit, AfterViewInit{
    step = 0;
    isDisabledPaymentStepTwo  = true;
    isDisabledPaymentStepThree = false;
-   emailPattern        : any = /\S+@\S+\.\S+/;
-   offerCards : any = [
-      {
-         id: 1,
-         name:"Debit Card",
-         content: "Visa Mega Shopping Offer"
-      },
-      {
-         id: 2,
-         name:"Credit Card",
-         content: "American Express 20% Flat"
-      },
-      {
-         id: 3,
-         name:"Debit Card",
-         content: "BOA Buy 1 Get One Offer"
-      },
-      {
-         id: 4,
-         name:"Master Card",
-         content: "Mastercard Elite Card"
-      },
-      {
-         id: 5,
-         name:"Debit Card",
-         content: "Visa Mega Shopping Offer"
-      }
-   ]
+   // emailPattern        : any = /\S+@\S+\.\S+/;
+ 
+	subscription : any ;
 
-   bankCardsImages : any = [
-      {
-         id:1,
-         image:"assets/images/client-logo-1.png"
-      },
-      {
-         id:2,
-         image:"assets/images/client-logo-2.png"
-      },
-      {
-         id:3,
-         image:"assets/images/client-logo-3.png"
-      },
-      {
-         id:4,
-         image:"assets/images/client-logo-4.png"
-      },
-      {
-         id:5,
-         image:"assets/images/client-logo-5.png"
-      }
-   ]
 
    paymentFormOne   : UntypedFormGroup;
 
    constructor(public embryoService : EmbryoService, 
                private formGroup : UntypedFormBuilder,
-               public router: Router) {
+               public router: Router,
+               private httpReq : HttpRequestService) {
 
       this.embryoService.removeBuyProducts();
    }
@@ -80,28 +36,17 @@ export class PaymentComponent implements OnInit, AfterViewInit{
          user_details       : this.formGroup.group({
             first_name         : ['', [Validators.required]],
             last_name          : ['', [Validators.required]],
-            street_name_number : ['', [Validators.required]],
-            apt                : ['', [Validators.required]],
-            zip_code           : ['', [Validators.required]],
-            city_state         : ['', [Validators.required]],
-            country            : ['', [Validators.required]],
+            shippingAddress : ['', [Validators.required]],
+            shippingCity         : ['', [Validators.required]],
             mobile             : ['', [Validators.required]],
-            email              : ['', [Validators.required, Validators.pattern(this.emailPattern)]],
-            share_email        : ['', [Validators.pattern(this.emailPattern)]],
+            // email              : ['', [Validators.required, Validators.pattern(this.emailPattern)]],
+            // share_email        : ['', [Validators.pattern(this.emailPattern)]],
          }),
-         offers             : this.formGroup.group({
-            discount_code   : [''],
-            card_type       : [1],
-            card_type_offer_name  : [null]
-         }),
-         payment            : this.formGroup.group({
-            card_number     : ['', [Validators.required]],
-            user_card_name  : ['', [Validators.required]],
-            cvv             : ['', [Validators.required]],
-            expiry_date     : ['', [Validators.required]],
-            card_id         : [1],
-            bank_card_value : [null]
-         })
+         // offers             : this.formGroup.group({
+         //    discount_code   : [''],
+         //    card_type       : [1],
+         //    card_type_offer_name  : [null]
+         // }),
       });
    }
 
@@ -169,38 +114,41 @@ export class PaymentComponent implements OnInit, AfterViewInit{
       }
    }
 
-   public selectedPaymentTabChange(value) {
-      let paymentGroup = <UntypedFormGroup>(this.paymentFormOne.controls['payment']); 
+   // public selectedPaymentTabChange(value) {
+   //    let paymentGroup = <UntypedFormGroup>(this.paymentFormOne.controls['payment']); 
 
-      paymentGroup.markAsUntouched();
+   //    paymentGroup.markAsUntouched();
 
-      if(value && value.index == 1) {
-            paymentGroup.controls['card_number'].clearValidators();
-            paymentGroup.controls['user_card_name'].clearValidators();
-            paymentGroup.controls['cvv'].clearValidators();
-            paymentGroup.controls['expiry_date'].clearValidators();
+   //    if(value && value.index == 1) {
+   //          paymentGroup.controls['card_number'].clearValidators();
+   //          paymentGroup.controls['user_card_name'].clearValidators();
+   //          paymentGroup.controls['cvv'].clearValidators();
+   //          paymentGroup.controls['expiry_date'].clearValidators();
 
-            paymentGroup.controls['bank_card_value'].setValidators([Validators.required]); 
-      } else {
+   //          paymentGroup.controls['bank_card_value'].setValidators([Validators.required]); 
+   //    } else {
         
-         paymentGroup.controls['card_number'].setValidators([Validators.required]); 
-         paymentGroup.controls['user_card_name'].setValidators([Validators.required]); 
-         paymentGroup.controls['cvv'].setValidators([Validators.required]); 
-         paymentGroup.controls['expiry_date'].setValidators([Validators.required]); 
+   //       paymentGroup.controls['card_number'].setValidators([Validators.required]); 
+   //       paymentGroup.controls['user_card_name'].setValidators([Validators.required]); 
+   //       paymentGroup.controls['cvv'].setValidators([Validators.required]); 
+   //       paymentGroup.controls['expiry_date'].setValidators([Validators.required]); 
 
-         paymentGroup.controls['bank_card_value'].clearValidators();
-      }
+   //       paymentGroup.controls['bank_card_value'].clearValidators();
+   //    }
 
-      paymentGroup.controls['card_number'].updateValueAndValidity();
-      paymentGroup.controls['user_card_name'].updateValueAndValidity();
-      paymentGroup.controls['cvv'].updateValueAndValidity();
-      paymentGroup.controls['expiry_date'].updateValueAndValidity();
-      paymentGroup.controls['bank_card_value'].updateValueAndValidity();
-   }
+   //    paymentGroup.controls['card_number'].updateValueAndValidity();
+   //    paymentGroup.controls['user_card_name'].updateValueAndValidity();
+   //    paymentGroup.controls['cvv'].updateValueAndValidity();
+   //    paymentGroup.controls['expiry_date'].updateValueAndValidity();
+   //    paymentGroup.controls['bank_card_value'].updateValueAndValidity();
+   // }
 
    public finalStep() {
-      let paymentGroup = <UntypedFormGroup>(this.paymentFormOne.controls['payment']);
+      let paymentGroup = <UntypedFormGroup>(this.paymentFormOne.controls['user_details']);
       if(paymentGroup.valid) {
+         
+         this.makeOrder()
+
          this.embryoService.addBuyUserDetails(this.paymentFormOne.value);
          this.router.navigate(['/checkout/final-receipt']);
       } else {
@@ -209,6 +157,72 @@ export class PaymentComponent implements OnInit, AfterViewInit{
          }
       }
    }
+
+   makeOrder(){
+      let products = JSON.parse(localStorage.getItem("cart_item"))
+      let totalPrice = 0;
+
+      let body = {
+         guestName : this.paymentFormOne.value.user_details.first_name + " "+ this.paymentFormOne.value.user_details.last_name,
+         shippingCity : this.paymentFormOne.value.user_details.shippingCity,
+         guestPhone : this.paymentFormOne.value.user_details.mobile,
+         shippingAddress : this.paymentFormOne.value.user_details.shippingAddress,
+         orderItems : [],
+         status : "NEW",
+         totalPrice : 0,
+         invoiceId: products[0]?.invoiceId,
+      }
+
+      let order;
+      for(let product of products){
+         order = {
+               product:{
+                  "id": product.id
+               },
+               "productColor":{
+                  "id":product?.selectedColor?.id ? product?.selectedColor?.id : null 
+               },
+               "productStorageOption":{
+                  "id":product?.selectedStorage?.id ? product?.selectedStorage?.id : null
+               },
+               "quantity": product.quantity,
+               "purchasePrice": product.price,
+            }
+
+            totalPrice += (product.price * product.quantity);
+
+            body.orderItems.push(order);
+      }
+
+      body.totalPrice = totalPrice;
+
+      var payload = {
+         apiName: 'createAnOrder',
+         body: body,
+         method: 'POST'
+         };
+      
+         this.subscription = this.httpReq.makeHttpRequest(payload)
+         .pipe(
+         map(res => res)
+         )
+         .subscribe(
+         data => {
+         },
+         error => {
+            // Handle the subscription error here
+            console.error('An error occurred:', error);
+         }
+         );
+
+
+   }
+
+   ngOnDestroy() {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+    }
 }
 
 

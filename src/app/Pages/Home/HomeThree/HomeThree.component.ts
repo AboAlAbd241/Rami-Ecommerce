@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
 import { map } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-HomeThree',
@@ -12,8 +13,8 @@ export class HomeThreeComponent implements OnInit {
 
 
    products : any;
-   allProducts : any;
-   newProductsSliderData : any;
+   // allProducts : any;
+   newProductsSliderData = {bestSeller : '',newArrival: '',ourChoice: ''};
 
    categories : any;
    brands: any = [];
@@ -21,7 +22,7 @@ export class HomeThreeComponent implements OnInit {
 
    slideConfig = {
       slidesToShow: 4,
-      slidesToScroll:2,
+      slidesToScroll:1,
       autoplay: true,
       autoplaySpeed: 2000,
       dots: false,
@@ -93,7 +94,8 @@ export class HomeThreeComponent implements OnInit {
 	subscription : any ;
 
 
-   constructor(public embryoService : EmbryoService,private httpReq : HttpRequestService) { }
+   constructor(public embryoService : EmbryoService,private httpReq : HttpRequestService,
+               private router: Router) { }
 
    ngOnInit() {
       this.getProducts();
@@ -102,7 +104,7 @@ export class HomeThreeComponent implements OnInit {
 
    public getProducts() {
       var payload = {
-         apiName: 'getProductAdmin',
+         apiName: 'getMainProducts',
          body: '',
          method: 'POST'
          };
@@ -113,7 +115,8 @@ export class HomeThreeComponent implements OnInit {
          )
          .subscribe(
          data => {
-            this.getProductsResponse(data.products);
+
+            this.getProductsResponse(data);
          },
          error => {
             // Handle the subscription error here
@@ -146,8 +149,10 @@ export class HomeThreeComponent implements OnInit {
    }
 
    public getProductsResponse(res) {
-      this.products = res;
-      this.newProductsSliderData = res;
+      this.newProductsSliderData.ourChoice = res?.ourChoice;
+      this.newProductsSliderData.newArrival = res?.newArrival;
+      this.newProductsSliderData.bestSeller = res?.bestSeller;
+      this.products = this.newProductsSliderData;
    }
 
 
@@ -155,5 +160,15 @@ export class HomeThreeComponent implements OnInit {
       this.embryoService.addToCart(value);
    }
 
+   public openCategory(categorey){
+      const data = {type : "categorySearch", id : categorey.id};
+      this.router.navigate(['/products',categorey.englishName],{ queryParams: data});
+   }
 
+
+   ngOnDestroy() {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+    }
 }

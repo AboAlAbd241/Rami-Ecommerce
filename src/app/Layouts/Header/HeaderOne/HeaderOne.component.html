@@ -2,49 +2,129 @@
   <mat-toolbar-row class="header-v1-top">
     <div class="container">
       <div fxLayout="row wrap" fxLayout="center center">
-        <div fxHide.xs="true" fxHide.sm="true" fxHide.md="true" fxFlex.md="33%" fxFlex.lg="33%" fxFlex.xl="33%">
-          <div class="list-flex">
-            <embryo-LanguageDropDown class="mr-3" [selectedValue]="embryoService?.language" (selectedLanguage)="selectedLanguage($event)"></embryo-LanguageDropDown>
-            <embryo-CurrencyDropDown [selectedValue]="embryoService?.currency" (selectedCurrency)="selectedCurrency($event)"></embryo-CurrencyDropDown>
+        <div fxHide.xs="true" fxHide.sm="true" fxHide.md="true" fxFlex.md="33%" fxFlex.lg="40%" fxFlex.xl="33%">
+          <div class="list-flex logo-site mt-4">
+           <embryo-AppLogo></embryo-AppLogo>
+
+            <!-- <embryo-LanguageDropDown class="mr-3" [selectedValue]="embryoService?.language" (selectedLanguage)="selectedLanguage($event)"></embryo-LanguageDropDown> -->
+            <!-- <embryo-CurrencyDropDown [selectedValue]="embryoService?.currency" (selectedCurrency)="selectedCurrency($event)"></embryo-CurrencyDropDown> -->
           </div>
         </div>
-        <div class="logo-site" fxFlex.xs="40" fxFlex.sm="40" fxFlex.md="50" fxFlex.lg="33%" fxFlex.xl="33%">
-         <embryo-AppLogo></embryo-AppLogo>
+
+        <div class="logo-site mt-3 search-container" fxFlex.xs="60" fxFlex.sm="60" fxFlex.md="50" fxFlex.lg="40%" fxFlex.xl="33%">
+          <form class="search-bar full-width" (ngSubmit)="submit()">
+            <div class="custom-search-container">
+                <input type="text" class="custom-search-input" 
+                (focus)="onFocus()" (blur)="onBlur()"
+                [formControl]="searchControl" placeholder="Search products" (input)="onSearchChange($event.target.value)">
+                <button class="custom-search-button">
+                    <i class="material-icons">search</i>
+                </button>
+            </div>
+            <button mat-icon-button matSuffix *ngIf="searchControl.value" aria-label="Clear" (click)="searchControl.reset()">
+                <mat-icon>close</mat-icon>
+            </button>
+        
+
+
+            <!-- Custom dropdown -->
+            <div class="custom-dropdown"  *ngIf="searchTerm.search && isFocused">
+              <ng-container  *ngIf="searchResults.length > 0; else noResults" class="product-item">
+
+                <div class="spinner"  *ngIf="isLoading">
+                  <mat-progress-spinner   [mode]="'indeterminate'"></mat-progress-spinner>
+                </div>
+                  <ng-container *ngIf="searchResults.length > 0">
+                    <div *ngFor="let product of searchResults" class="product-item" (click)="openProductDetails(product)">
+                        <ng-container (onClick)="openProductDetails(product)">
+                        <img [src]="product.thumbnailsImage" alt="{{product.name}}" class="search-thumbnail">
+                        <div class="product-info">
+                            <span class="product-name">{{ product.name }}</span>
+                            <span class="product-price">{{ product?.price | currency:embryoService?.currency }}</span>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+
+              </ng-container>
+
+              <ng-template #noResults>
+                  <div class="no-results-message">
+                      No results found
+                  </div>
+              </ng-template>
+           </div>
+        </form>
+        
+
         </div>
-        <div fxFlex.xs="60" fxFlex.sm="60" fxFlex.md="50" fxFlex.lg="33%" fxFlex.xl="33%">
+
+        
+        <div fxFlex.xs="40" fxFlex.sm="60" fxFlex.md="50" fxFlex.lg="20%" fxFlex.xl="33%">
           <span fxFlex></span>
           <div class="list-flex user-tool">
             <embryo-HeaderCart [currency]="embryoService?.currency" [cartProducts]="embryoService?.localStorageCartProducts" [count]="embryoService?.navbarCartCount" (removeProductData)="openConfirmationPopup($event)"></embryo-HeaderCart>
 
-            <embryo-WishList [currency]="embryoService?.currency" [wishListProducts]="embryoService?.localStorageWishlist" [count]="embryoService?.navbarWishlistProdCount" (removeWishListData)="openWishlistConfirmationPopup($event)" (addAllWishlistToCart)="addAllWishlistToCart($event)" (addToCart)="addToCart($event)"></embryo-WishList>
+            <!-- <embryo-WishList [currency]="embryoService?.currency" [wishListProducts]="embryoService?.localStorageWishlist" [count]="embryoService?.navbarWishlistProdCount" (removeWishListData)="openWishlistConfirmationPopup($event)" (addAllWishlistToCart)="addAllWishlistToCart($event)" (addToCart)="addToCart($event)"></embryo-WishList> -->
             
-            <embryo-HeaderUserProfileDropdown></embryo-HeaderUserProfileDropdown>
+            <!-- <embryo-HeaderUserProfileDropdown></embryo-HeaderUserProfileDropdown> -->
           </div>
         </div>
       </div>
     </div>
   </mat-toolbar-row>
+
+  <!-- <mat-toolbar-row class="header-v1-top">
+    <div class="container">
+      <div fxLayout="row wrap" fxLayoutAlign="center center">
+        
+      </div>
+    </div>
+  </mat-toolbar-row> -->
+
+
+
   <mat-toolbar-row class="header-v1-bottom main-menu-wrap">
     <div class="container">
       <div class="header-v1-bottom-inner">
         <embryo-Menu></embryo-Menu>
-        <div class="search-box">
+        <!-- <div class="search-box">
           <button type="button" mat-fab (click)="toggleSearch()">
             <i class="material-icons notranslate">
               search
             </i>
           </button>
-        </div>
-        <div class="search-form">
-          <form>
-            <input type="text" placeholder="Search and hit enter">
-            <button type="button" mat-fab class="close-btn" (click)="toggleSearch()">
-              <i class="material-icons">
-                close
-              </i>
-            </button>
+        </div> -->
+        <!-- <div class="search-form"> -->
+          <!-- <form>
+              <input type="text" placeholder="Search and hit enter" (input)="onSearchChange($event.target.value)">
+              <button type="button" mat-fab class="close-btn" (click)="toggleSearch()">
+                  <i class="material-icons">close</i>
+              </button>
           </form>
-        </div>
+          Display search results
+          <div *ngIf="searchResults.length > 0" class="search-results">
+              <div *ngFor="let product of searchResults" class="search-item">
+                  <img [src]="product.thumbnailsImage" alt="{{product.name}}" class="search-image">
+                  <span class="search-title">{{ product.name }}</span>
+              </div>
+          </div> -->
+
+          <!-- <mat-form-field  *ngIf="isSearchVisible">
+            <input type="text" calss="search-container" placeholder="Search products" matInput [formControl]="searchControl" (input)="onSearchChange($event.target.value)" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let product of searchResults" [value]="product.name">
+                <img [src]="product.thumbnailsImage" alt="{{product.name}}" class="search-image">
+                {{ product.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <button mat-button *ngIf="isSearchVisible" matSuffix mat-icon-button aria-label="Clear" (click)="searchControl.reset(); isSearchVisible=false">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field> -->
+          
+          
+      <!-- </div> -->
         <button class="responsive-toggle" mat-icon-button (click)="toggleSidebar()">
           <i class="material-icons">menu</i>
         </button>

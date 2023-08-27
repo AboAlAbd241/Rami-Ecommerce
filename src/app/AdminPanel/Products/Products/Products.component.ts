@@ -19,12 +19,28 @@ export class ProductsComponent implements OnInit {
 	productsList 		        : any;
 	productsGrid 			    : any;
 	popUpDeleteUserResponse 	: any;
-	showType	    				: string = 'grid';
+	showType	    			: string = 'grid';
 	displayedProductColumns : string [] = ['id', 'image','name','brand','category', 'product_code', 'old_price', 'price','action' ];
 	@ViewChild(MatPaginator) paginator : MatPaginator;
 	@ViewChild(MatSort) sort           : MatSort;
 
 	subscription : any ;
+
+	resultsPerPage	: any 	 = "20";
+	selectedCategory: string = "";
+	selectedBrad    : string = "";
+	sortBy		  	: any 	 = 'DEFAULT';
+	isLoading		 		 =	false;
+	// productList     : any ;
+	categoryType;
+	totalPages;
+
+	searchText;
+
+
+
+
+	searchObj = {search : '', size : 20, page : 0, sortType : this.sortBy, categoryId : "", brandId : ""};
 
 
 	constructor(public translate : TranslateService,
@@ -33,8 +49,56 @@ export class ProductsComponent implements OnInit {
 					private httpReq : HttpRequestService) { }
 
 	ngOnInit() {
+		this.categories();
+		this.getProducts();
+
+	}
+
+	public getProducts() {
+
+		this.isLoading = true;
+		this.searchObj.sortType = this.sortBy;
+		this.searchObj.size = this.resultsPerPage;
+		this.searchObj.categoryId = this.selectedCategory;
+		this.searchObj.brandId = this.selectedBrad;
+
+		if(this.searchText && this.searchText.trim() != ''){
+			this.searchObj.search = this.searchText;
+		}
+
+
 		var payload = {
-			apiName: 'getProductAdmin',
+		   apiName: 'getProductByTextSearch',
+		   body: this.searchObj,
+		   method: 'POST'
+		   };
+		
+		   this.subscription = this.httpReq.makeHttpRequest(payload)
+		   .pipe(
+		   map(res => res)
+		   )
+		   .subscribe(
+		   data => {
+			  this.productsGrid = data.products;
+			  this.totalPages = data.totalPages;
+			  this.formatProduct();
+			  this.isLoading = false;
+			  this.searchObj.search = "";
+
+		   },
+		   error => {
+			  // Handle the subscription error here
+			  console.error('An error occurred:', error);
+			  this.isLoading = false;
+			  this.searchObj.search = "";
+		   }
+		   );
+	 }
+
+
+	 public categories(){
+		var payload = {
+			apiName: 'getCategoryAndBrands',
 			body: '',
 			method: 'POST'
 		  };
@@ -45,7 +109,13 @@ export class ProductsComponent implements OnInit {
 		  )
 		  .subscribe(
 			data => {
-				this.productsGrid = data.products;
+			  this.categoryType = [];
+	  
+			  //get category
+			  for(const categorey of data.categories){
+				this.categoryType.push({value : categorey.englishName, id : categorey.id, features: categorey.features });
+			  }
+	  
 			},
 			error => {
 			  // Handle the subscription error here
@@ -177,6 +247,40 @@ export class ProductsComponent implements OnInit {
 	let img = images.filter(img => img.priority == 0);
 	return img[0].imagePath;
    }
+
+   formatProduct(){
+
+	this.productsGrid?.forEach(product => {
+	   
+	   if(product?.images?.length > 1){
+		  let secondImage = product.thumbnailsImage;
+		  secondImage = secondImage.split('/');
+		  secondImage.pop(); // Remove the last element (image name)
+		  let newPath = secondImage.join('/');
+	
+	
+		  let secondThumbnailsImage = product.images.filter(item =>{
+			 return item.priority == 1;
+		  })
+	
+	
+		  product.secondThumbnailsImage = newPath + '/' + secondThumbnailsImage[0].imagePath.split('/').pop();
+	   }
+	});
+	
+ }
+
+   get displayedPages(): number[] {
+	let start = Math.max(this.searchObj.page, 0);
+	let end = Math.min(this.searchObj.page + 3, this.totalPages);
+	return Array.from({length: (end - start)}, (_, i) => start + i + 1);
+}
+
+  changePage(page: number): void {
+	this.searchObj.page = page;
+	this.getProducts();
+  }
+
 
    ngOnDestroy() {
     if (this.subscription) {

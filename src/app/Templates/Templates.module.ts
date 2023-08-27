@@ -1,4 +1,4 @@
-import { NgModule }       from '@angular/core'; 
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule }       from '@angular/core'; 
 import { RouterModule }   from '@angular/router';
 import { CommonModule }   from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,7 +62,7 @@ import { ShopDetailsComponent } from './ShopDetails/ShopDetails.component';
       MatRadioModule,
       MatDialogModule,
       MatGridListModule,
-      GlobalModule
+      GlobalModule,
    ],
    declarations: [
       ProductGridComponent,

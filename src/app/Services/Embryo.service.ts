@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AngularFireDatabase, AngularFireObject } from "@angular/fire/compat/database";
@@ -24,12 +24,12 @@ export class EmbryoService {
 	currency  : string = 'ILS';
 	language  : string = 'en';
 
-	shipping  : number = 12.95;
-	tax       : number = 27.95;
+	shipping  : number = 0;
+	tax       : number = 0;
 
 	products  : AngularFireObject<any>;
 
-	localStorageCartProducts : any;
+	localStorageCartProducts : any = null;
 	localStorageWishlist : any;
 	navbarCartCount : number = 0;
 	navbarWishlistProdCount = 0;
@@ -47,22 +47,22 @@ export class EmbryoService {
 		localStorage.removeItem("user");
 		localStorage.removeItem("byProductDetails");
 
-		this.db.object("products").valueChanges().subscribe(res => {this.setCartItemDefaultValue(res['gadgets'][1])});
+		// this.db.object("products").valueChanges().subscribe(res => {this.setCartItemDefaultValue(res['gadgets'][1])});
 	}
 
-	public setCartItemDefaultValue(setCartItemDefaultValue) {
-		let products : any;
-		products = JSON.parse(localStorage.getItem("cart_item")) || [];
-		let found = products.some(function (el, index) {
-			if(el.name == setCartItemDefaultValue.name){
-				return  true;
-			}
-		});
-		if (!found) { products.push(setCartItemDefaultValue); }
+	// public setCartItemDefaultValue(setCartItemDefaultValue) {
+	// 	let products : any;
+	// 	products = JSON.parse(localStorage.getItem("cart_item")) || [];
+	// 	let found = products.some(function (el, index) {
+	// 		if(el.name == setCartItemDefaultValue.name){
+	// 			return  true;
+	// 		}
+	// 	});
+	// 	if (!found) { products.push(setCartItemDefaultValue); }
 
-		localStorage.setItem("cart_item", JSON.stringify(products));
-		this.calculateLocalCartProdCounts();
-	}
+	// 	localStorage.setItem("cart_item", JSON.stringify(products));
+	// 	this.calculateLocalCartProdCounts();
+	// }
 
 	public reviewPopup(singleProductDetails, reviews)
 	{
@@ -91,7 +91,8 @@ export class EmbryoService {
 	}
 
 	public getProducts() {
-		this.products = this.db.object("products");
+		// this.products = this.db.object("products");
+		this.calculateLocalCartProdCounts();
 		return this.products;
 	}
 
@@ -165,6 +166,7 @@ export class EmbryoService {
 	public calculateLocalCartProdCounts() {
 		this.localStorageCartProducts = null;
 		this.localStorageCartProducts = JSON.parse(localStorage.getItem("cart_item")) || [];
+		this.products = this.localStorageCartProducts;
 		this.navbarCartCount = +((this.localStorageCartProducts).length);
 	}
 

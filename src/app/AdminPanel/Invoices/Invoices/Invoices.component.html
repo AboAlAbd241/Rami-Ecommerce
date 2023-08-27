@@ -1,66 +1,113 @@
 <div class="dash-title mb-4 ml-3">
    Invoice List
 </div>
-<!-- dash-title -->
-<mat-card class="m-3">
-   <div fxLayout="row wrap">
-      <div fxFlex.gt-md="600px" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
-         <mat-form-field class="w-100">
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-         </mat-form-field>
+
+<mat-card class="py-4 pb-3">
+   <div fxLayout="row wrap" fxLayoutAlign="space-between center">
+      <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="30" fxFlex.lg="30" fxFlex.xl="30">
+         <div class="pr-3">
+            <div class="dash-title">Search</div>
+         </div>
       </div>
-   </div>
-   <!-- wrap -->
+      <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="70" fxFlex.lg="70" fxFlex.xl="70">
+         <div fxLayout="row wrap">
+            <div class="form-group pr-3" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="calc(100% - 300px)" fxFlex.lg="calc(100% - 300px)" fxFlex.xl="calc(100% - 300px)">
+               <mat-form-field class="w-100" floatLabel="never">
+                  <input matInput placeholder="Search by invoiceId"  [(ngModel)]="searchByInvoiceId">
+               </mat-form-field>
+            </div>
+            <!-- form-group -->
+            <div class="contact-btn" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="300px" fxFlex.lg="300px" fxFlex.xl="300px"> 
+               <button class="mr-2 mb-2" mat-raised-button color="primary" (click)="addInvoiceIdtoSearch()">Search</button>
+            </div>
+            <!-- contact-btn -->
+         </div>
+      </div>
+   </div>			
 </mat-card>
+
+<div class="filter-wrap mx-3" fxLayout="row wrap" fxLayoutGap="15px">
+   <div>
+      <mat-form-field>
+         <mat-label>Status</mat-label>
+         <mat-select [(value)]="status" (selectionChange)="getOrders()">
+             <mat-option value="all">All</mat-option>
+             <mat-option value="NEW">NEW</mat-option>
+             <mat-option value="IN PROGRESS">IN PROGRESS</mat-option>
+             <mat-option value="PAID">PAID</mat-option>
+             <mat-option value="CANCELLED">CANCELLED</mat-option>
+             <mat-option value="RETURNED">RETURNED</mat-option>
+         </mat-select>
+     </mat-form-field> 
+   </div>
+   <div>
+      <mat-form-field>
+         <mat-label>Date Range</mat-label>
+         <mat-date-range-input [rangePicker]="picker">
+             <input matStartDate placeholder="From date" [(ngModel)]="startDate" (dateChange)="onStartDateChange()" readonly>
+             <input matEndDate placeholder="To date" [(ngModel)]="endDate" (dateChange)="onEndDateChange()" readonly>
+         </mat-date-range-input>
+         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+         <mat-date-range-picker #picker></mat-date-range-picker>
+     </mat-form-field>
+   </div>
+</div>
+
+
+
 <ng-container *ngIf="invoiceList && invoiceList.length>0; else elseBlock">
    <div fxLayout="column">
       <mat-card>
          <div class="table-responsive-x">
             <table mat-table [dataSource]="dataSource" class="w-100 table-scroll-wrap">
-               <ng-container matColumnDef="position">
-                  <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> No. </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.position}} </td>
-               </ng-container>
                <ng-container matColumnDef="invoiceId">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Invoice Id </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> <a href="javascript:void(0)" (click) ="onSeeDialog()"> {{element.invoiceId}}</a> </td>
+                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> <a href="javascript:void(0)" (click) ="onSeeDialog(element)"> {{element?.invoiceId}}</a> </td>
                </ng-container>
                <ng-container matColumnDef="name">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Buyer </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.guestName}} </td>
                </ng-container>
                <ng-container matColumnDef="date">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef>Date </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.date}} </td>
+                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.orderDate| date:'yyyy-mm-dd HH:mm'}} </td>
                </ng-container>
                <ng-container matColumnDef="price">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Price </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> ${{element.price}} </td>
-               </ng-container>
-               <ng-container matColumnDef="payment">
-                  <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef mat-sort-header> Payment </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.payment}} </td>
+                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.totalPrice | currency}} </td>
                </ng-container>
                <ng-container matColumnDef="status">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Status </th>
-                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.status}} </td>
-               </ng-container> 
+                  <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
+                      <mat-form-field class="mt-3">
+                          <mat-select [(value)]="element.status" (selectionChange)="updateOrderStatus($event, element)">
+                              <mat-option value="NEW">NEW</mat-option>
+                              <mat-option value="IN PROGRESS">IN PROGRESS</mat-option>
+                              <mat-option value="PAID">PAID</mat-option>
+                              <mat-option value="RETURNED">RETURNED</mat-option>
+                              <mat-option value="CANCELLED">CANCELLED</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </td>
+              </ng-container>
+              
                <ng-container matColumnDef="action">
                   <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Action </th>
                   <td class="px-3 text-nowrap" mat-cell *matCellDef="let element;let i = index;">
-                  <button mat-icon-button (click) ="onSeeDialog()" color="primary">
+                  <button mat-icon-button (click) ="onSeeDialog(element)" color="primary">
                      <i class="material-icons">remove_red_eye</i>
                   </button> 
-                  <button color="warn" mat-icon-button (click)="onDelete(i)">
+                  <!-- <button color="warn" mat-icon-button (click)="onDelete(i)">
                      <mat-icon class="">delete</mat-icon>
-                  </button>
+                  </button> -->
                   </td>
                </ng-container>
                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
          </div>  
-         <mat-paginator [pageSizeOptions]="[15, 30, 45, 60]"></mat-paginator>
+         <mat-paginator [length]="totalPages * size"
+         [pageSizeOptions]="[15, 30, 45, 60]" (page)="onPaginateChange($event)"></mat-paginator>
          <!-- table-responsive -->
       </mat-card>
    </div>

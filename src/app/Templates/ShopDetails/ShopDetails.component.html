@@ -5,19 +5,20 @@
         <div fxLayout='row wrap' class="col-gap position-relative">
           <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md=50 fxFlex.lg="50" fxFlex.xl="50">
             <div fxLayout='row wrap'>
-              <div fxFlex.xs="15" fxFlex.sm="15" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15">
+              <div fxFlex.xs="15" fxFlex.sm="15" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15" *ngIf="detailData?.images?.length > 1">
                 <div class="product-detail-image-gallery pr-4">
                   <mat-grid-list cols="1" rowHeight="1:1" gutterSize="20px">
-                    <mat-grid-tile *ngFor="let img of detailData?.image_gallery; let i=index">
+                    <mat-grid-tile *ngFor="let img of detailData?.images; let i=index">
                       <div class="product-image-gallery-item">
                         <a id="{{i}}_img" class="p-link" [ngClass]="{ 'border-active': i === 0 }" href="javascript:void(0)" (mouseenter)="getImagePath(img, i)">
-                          <img [src]="img" alt="">
+                          <img [src]="img.imagePath" alt="">
                         </a>
                       </div>
                     </mat-grid-tile>
                   </mat-grid-list>
                 </div>
               </div>
+
               <div fxFlex.xs="85" fxFlex.sm="85" fxFlex.md="85" fxFlex.lg="85" fxFlex.xl="85" class="relative" *ngIf="mainImgPath">
                 <embryo-ImgZoom 
                 [imgSrc]="mainImgPath" 
@@ -30,86 +31,153 @@
                 </embryo-ImgZoom>
               </div>
             </div>
+
+            <div class="row col-12">
+              <mat-tab-group  class="remove-border-bottom">
+                <!-- Description Tab -->
+                <mat-tab label="الوصف" *ngIf="!isLongDescription">
+                  <div class="content">
+                    <!-- Your description content goes here. 
+                         For instance, you can bind the description from the product object -->
+                    <p [innerHTML]="detailData.description"></p>
+                  </div>
+                </mat-tab>
+              
+               <!-- Specification Tab -->
+              <mat-tab label="المواصفات" *ngIf="detailData?.specifications && detailData?.specifications?.length > 0">
+                <div class="specification-content" class="mt-4 col-12">
+                  <!-- Loop through each specification group -->
+                  <div *ngFor="let spec of detailData.specifications" class="spec-group">
+                    <div class="header"> <span style="margin-right: 30px;">{{ spec.header }}</span> </div>
+                    <mat-table [dataSource]="spec.keyValuePairs" class="spec-table">
+      
+                      <!-- Key Column -->
+                      <ng-container matColumnDef="key">
+                        <mat-cell *matCellDef="let element" class="key-cell"> {{element.key}} </mat-cell>
+                      </ng-container>
+      
+                      <!-- Value Column -->
+                      <ng-container matColumnDef="value">
+                        <mat-cell *matCellDef="let element" class="value-cell"> {{element.value}} </mat-cell>
+                      </ng-container>
+      
+                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </mat-tab>
+      
+      
+              </mat-tab-group>
+              
+            </div>
+
+
+
+
+
           </div>
+
           <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md=50 fxFlex.lg="50" fxFlex.xl="50">
             <div class="product-detail-content">
-              <a href="javascript:void(0)" [routerLink]="['/']">Back to Shop</a>
-              <h3>{{detailData?.name}}</h3>
+              <h4>{{detailData?.name}}</h4>
               <div fxLayoutAlign="start center" class="mb-3">
-                <div>
-                  <a href="javascript:void(0)" class="text-underline" (click)="reviewPopup(detailData)">ADD A REVIEW</a>
-                </div>
               </div>
               <div class="product-detail-price">
+                <div *ngIf="detailData?.oldPrice" class="old-price">
+                  <span class="strike-through">{{ detailData?.oldPrice | currency:currency }}</span>
+                </div>
                 <h4 class="accent-color">{{totalPrice | currency:currency}} </h4>
               </div>
               <ul class="no-style mb-4">
                 <li>
-                  <span class="font-medium"> Availablity </span>: 
-                    <span *ngIf="detailData?.availablity">In Stocks</span>
-                    <span *ngIf="!(detailData?.availablity)">Out Of Stocks</span>
+                  <span class="option-label"> التوفر </span>: 
+                    <span *ngIf="detailData?.available">متوفر</span>
+                    <span *ngIf="!(detailData?.available)">غير متوفر</span>
                 </li>
                 <li>
-                  <span class="font-medium">Product Code </span>: {{detailData?.product_code}}
+                  <span class="option-label">رمز المنتج </span>: {{detailData?.id}}
                 </li>
-                <li>
-                  <span class="font-medium">Tags</span>: 
-                    <ng-container *ngFor="let tag of detailData.tags">{{tag}}</ng-container>
+                <li *ngIf="detailData?.brand">
+                  <span class="option-label" >العلامة التجارية</span>: 
+                    <ng-container>{{detailData?.brand?.englishName}}</ng-container>
                 </li>
+                <li *ngIf="detailData?.productColors.length > 0 ">
+                  <div class="color-options">
+                      <span class="option-label">اللون:</span>
+                      <div class="color-buttons">
+                          <div 
+                              *ngFor="let color of detailData?.productColors" 
+                              matTooltip="هذا اللون غير متوفر حاليا"
+                              [matTooltipDisabled]="color?.available"
+                          >
+                              <button
+                                  class="color-button"
+                                  [style.background-color]="color?.color"
+                                  (click)="selectColor(color)"
+                                  [ngClass]="{ 'selected': selectedColor?.id === color?.id }"
+                                  [disabled]="!color?.available"
+                              ></button>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+              
+              <li *ngIf="detailData?.storageOptions.length > 0">
+                  <div class="storage-options"> 
+                      <span class="option-label">مساحة التخزين:</span>
+                      <div class="storage-buttons">
+                          <div 
+                              *ngFor="let storageOption of detailData.storageOptions"
+                              matTooltip="مساحة التخزين غير متوفرة حاليا"
+                              [matTooltipDisabled]="storageOption?.available"
+                          >
+                              <button
+                                  class="storage-button"
+                                  (click)="selectStorage(storageOption)"
+                                  [ngClass]="{ 'selected': selectedStorage.id === storageOption.id }"
+                                  [disabled]="!storageOption?.available"
+                              >
+                                  {{ storageOption.storageSize }} 
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+            
               </ul>
-              <div class="short-des">
-                <p>{{detailData?.description}}
+              <div class="short-des" #description *ngIf="isLongDescription">
+                <span class="option-label">الوصف :</span>
+                <p class="formatDescription" [innerHTML]="detailData?.description">
                 </p>
               </div>
-              <div class="bullets-points">
-                <ul class="bullets-list">
-                  <li *ngFor="let feature of detailData?.features">
-                    {{feature}}
-                  </li>
-                </ul>
-              </div>
-              <div fxLayoutGap="30px" class="mb-3 select-group">
-                <ng-container *ngIf="type == 'men' || type == 'women'">
-                  <mat-form-field>
-                    <mat-select class="product-detail-select" placeholder="Color">
-                      <ng-container *ngFor="let color of colorsArray">
-                        <mat-option class="product-detail-select" value="{{color}}">{{color}}</mat-option>
-                      </ng-container>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-select placeholder="Size">
-                      <ng-container *ngFor = "let size of sizeArray">
-                        <mat-option value="{{size}}">{{size}}</mat-option>
-                      </ng-container>
-                    </mat-select>
-                  </mat-form-field>
-                </ng-container>
-                <mat-form-field>
-                  <mat-select placeholder="Quantity" (selectionChange)="calculatePrice(detailData, $event.value)">
-                    <ng-container *ngFor="let quantity of quantityArray">
-                      <mat-option value="{{quantity}}">{{quantity}}</mat-option>
-                    </ng-container>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="mb-4">
-                <a href="javascript:void(0)" class="text-underline" (click)="addToWishlist(detailData)"> Add To Wishlist</a>
-              </div>
-              <div class="mb-5 detail-btns">
-                <button mat-raised-button color="accent" class="button-lg mr-3" (click)="addToCart(detailData)">Add To Cart</button>
-                <button class="button-lg" mat-raised-button (click)="buyNow(detailData)">Buy Now</button>
-              </div>
-              <div fxLayoutAlign="start center">
-                <div class="mr-3"> <span>Share Now</span></div>
-                <div class="detail-product-share">
-                  <embryo-SocialShare></embryo-SocialShare>
+
+              <div fxLayoutGap="30px" class="mb-3 select-group" *ngIf="detailData?.available">
+                <div class="quantity-container">
+                  <button mat-icon-button (click)="decreaseQuantity()">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                  <span class="quantity">{{ selectedQuantity }}</span>
+                  <button mat-icon-button (click)="increaseQuantity()">
+                    <mat-icon>add</mat-icon>
+                  </button>
                 </div>
               </div>
+              <div class="mb-5 detail-btns" *ngIf="detailData?.available">
+                <button mat-raised-button color="accent" class="button-lg mr-3" (click)="addToCart(detailData)">أضف إلى السلة</button>
+                <button class="button-lg" mat-raised-button (click)="buyNow(detailData)">شراء الان</button>
+              </div>
+
+              <div class="mb-5 detail-btns" *ngIf="!detailData?.available">
+                <h4 style="color: rgb(230, 82, 82);">نعتذر هذا المنتج غير متوفر حاليا </h4>
+              </div>
+              
             </div>
           </div>
+
         </div>
       </div>
+      
     </div>
   </div>
 </div>

@@ -22,7 +22,7 @@
           <div class="side-cart-list px-3" *ngFor="let product of embryoService.localStorageCartProducts">
             <div fxLayoutAlign="center center">
                 <div fxFlex.xs="25" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
-                <img [src]="product?.image" width="80" alt="cart img">
+                <img width="80" [src]="product?.thumbnailsImage" [alt]="product?.images?.[0]?.imagePath || 'defaultPath'">
               </div>
               <div fxFlex.xs="55" fxFlex.sm="55" fxFlex.md="55" fxFlex.lg="55" fxFlex.xl="55" class="px-3">
                 <h6 class="mb-1">{{product?.name}}</h6>
@@ -30,6 +30,8 @@
                   <span>{{product?.quantity}}</span>
                  </p>
                 <p class="font-bold">{{calculateProductSinglePrice(product, product?.quantity) | currency:embryoService?.currency}}</p>
+                <div *ngIf="product?.selectedStorage?.storageSize" > <p>{{product?.selectedStorage?.storageSize}}</p></div>
+                <div *ngIf="product?.selectedColor?.color" class="color-display" [style.background-color]="product?.selectedColor?.color"></div>
               </div>
               <div fxFlex.xs="20" fxFlex.sm="20" fxFlex.md="20" fxFlex.lg="20" fxFlex.xl="20" class="side-cart-actions text-center px-2">
                 <a href="javascript:void(0)" (click)="removeProduct(product)"><i class="material-icons">

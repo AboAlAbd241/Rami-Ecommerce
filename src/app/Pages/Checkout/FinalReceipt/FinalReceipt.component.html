@@ -1,5 +1,5 @@
 
-<embryo-PageTitle heading="Payment Confirmation"></embryo-PageTitle>
+<!-- <embryo-PageTitle heading="Payment Confirmation"></embryo-PageTitle> -->
 
 <div class="inner-container" *ngIf="(embryoService.buyUserCartProducts && embryoService.buyUserCartProducts.length>0); else elseBlock">
   <div class="bg-white final-receipt-page section-gap" *ngIf="userDetails">
@@ -12,14 +12,14 @@
               <div class="text-center bg-grey p-5 mat-card-pad-none">
                 <h1>Thank You</h1>
                 <h5 class="mb-4">Payment is successfully processsed and your order is on the way </h5>
-                <h6 class="mb-4">Transaction ID:267676GHERT105467</h6>
+                <!-- <h6 class="mb-4">Transaction ID:267676GHERT105467</h6> -->
                 <img src="assets/images/checked.png" width="64" height="64" alt="Success">
               </div>
               <div class="py-5">
                 <div fxLayout="row wrap" fxLayoutAlign="none" class="col-gap">
                   <div fxFlex.xs="100" fxFlex.sm="50" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50">
                     <h6>Summery</h6>
-                    <p class="mb-1">Order ID: 2563883628932</p>
+                    <p class="mb-1" *ngIf="this.product[0]?.invoiceId">Order ID: {{ this.product[0]?.invoiceId}}</p>
                     <p class="mb-1">Order Date: {{todayDate | date:'MMMM d, y'}} </p>
                     <p class="mb-1">Order Total: {{getTotalPrice() | currency:embryoService?.currency}}</p>
                   </div>
@@ -39,7 +39,7 @@
                 <h4 class="pt-5">Your Ordered Details</h4>
                 <div fxLayout="row wrap" fxLayoutAlign="start center" class="col-gap" *ngFor="let product of embryoService.buyUserCartProducts">
                   <div fxFlex.xs="20" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
-                    <img width="100" [src]="product?.image" alt="cart Image">
+                    <img width="100" [src]="product?.thumbnailsImage" [alt]="product?.images?.[0]?.imagePath || 'defaultPath'">
                   </div>
                   <div fxFlex.xs="30" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
                     <h6>Product Name</h6>
@@ -54,6 +54,28 @@
                     <h6>Price</h6>
                     <p>{{ calculateProductSinglePrice(product, product?.quantity) | currency:embryoService?.currency}}</p>
                   </div>
+                  <div fxFlex.xs="50" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+                  </div>
+                  <div  *ngIf="product?.selectedColor?.color" fxFlex.xs="50" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+                    <h6>Selected Color</h6>
+                    <div class="color-display" [style.background-color]="product?.selectedColor?.color"></div>
+                </div>                                     
+                 <div *ngIf="product?.selectedStorage?.storageSize" fxFlex.xs="50" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+                    <h6>Selected Storage</h6>
+                    <p>{{product?.selectedStorage?.storageSize}} </p>
+                 </div>
+                  
+                 <!-- <div class="color-container" *ngIf="order?.productColor?.color" fxFlex.xs="50" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+                    <h6>Color</h6>
+                    <div class="color-display" [style.background-color]="order?.productColor?.color"></div>
+                </div>                                     
+                 <div *ngIf="order?.productStorageOption?.storageSize" fxFlex.xs="50" fxFlex.sm="25" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+                    <h6>Storage</h6>
+                    <p>{{order?.productStorageOption?.storageSize}} </p>
+                 </div> -->
+                 <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100">
+                    <hr class="dark-border spacer">
+                 </div>
                 </div>
                 <hr class="dark-border spacer">
                 <div class="text-right ">
@@ -76,7 +98,7 @@
               </div>
               <div class="btn-group">
               
-              <button mat-raised-button color="accent" class="button-lg" type="button">Download PDF</button>
+              <!-- <button mat-raised-button color="accent" class="button-lg" type="button">Download PDF</button> -->
               <button mat-raised-button color="accent" class="button-lg" [routerLink]="['/']">Go to Home</button>
             </div>
             </mat-card>

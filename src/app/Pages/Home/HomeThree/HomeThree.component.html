@@ -1,11 +1,12 @@
-<embryo-HomePageThreeSlider [isRTL]="embryoService.isDirectionRtl"></embryo-HomePageThreeSlider>
-<embryo-CtaTwo></embryo-CtaTwo>
+<embryo-HomePageThreeSlider 
+[isRTL]="embryoService.isDirectionRtl"></embryo-HomePageThreeSlider>
+<embryo-CtaTwo ></embryo-CtaTwo>
 <!-- <embryo-CollectionGallery></embryo-CollectionGallery> -->
 
 <div class="section-gap grey-bg">
   <div class="container">
     <div class="categories-grid">
-      <div class="category" *ngFor="let category of categories">
+      <div class="category" *ngFor="let category of categories"  (click)="openCategory(category)" [routerLink]="['/products', category.englishName]">
         <img src="{{category.imagePath}}" alt="Category 1">
         <h5>{{category.englishName}}</h5>
       </div>
@@ -15,18 +16,21 @@
 
 
 
+<!-- Products slider -->
 <div class="shop-card-wrapper section-gap pb-5  tab-sldier-v2" *ngIf="products">
 
-  <div class="container">
+  <!-- New arrival -->
+  <div class="container"*ngIf="newProductsSliderData?.newArrival && newProductsSliderData?.newArrival.length > 0">
     <div  class="w-100">
    
       <div class="block-title text-center mb-4"><h3>وصل حديثا</h3></div>
     </div>
 
-    <ng-container *ngIf="newProductsSliderData.length > 0">
+    <ng-container >
       <ngx-slick-carousel *ngIf="embryoService.isDirectionRtl" class="carousel" [config]="rtlSlideConfig">
-        <div ngxSlickItem *ngFor="let product of newProductsSliderData;  let i=index">
-          <embryo-ProductCard [product]="product" (addToCart)="addToCart($event)" 
+        <div ngxSlickItem *ngFor="let product of newProductsSliderData.newArrival;  let i=index">
+          <embryo-ProductCard [product]="product" 
+          (addToCart)="addToCart($event)" 
           [currency]="embryoService.currency"  
           [index]="i" type="new"></embryo-ProductCard>
 
@@ -39,7 +43,51 @@
       </ngx-slick-carousel> -->
     </ng-container>
   </div>
+
+  <!-- Best seller -->
+  <div class="container" *ngIf="newProductsSliderData?.bestSeller && newProductsSliderData?.bestSeller?.length > 0">
+    <div  class="w-100">
+   
+      <div class="block-title text-center mb-4"><h3>الأكثر مبيعا</h3></div>
+    </div>
+
+    <ng-container >
+      <ngx-slick-carousel *ngIf="embryoService.isDirectionRtl" class="carousel" [config]="rtlSlideConfig">
+        <div ngxSlickItem *ngFor="let product of newProductsSliderData.bestSeller;  let i=index">
+          <embryo-ProductCard [product]="product" 
+          (addToCart)="addToCart($event)" 
+          [currency]="embryoService.currency"  
+          [index]="i" type="new"></embryo-ProductCard>
+
+        </div>
+      </ngx-slick-carousel>
+    </ng-container>
+
+  </div>
+
+
+  <!-- our Choice -->
+  <div class="container" *ngIf="newProductsSliderData?.ourChoice && newProductsSliderData?.ourChoice?.length > 0">
+    <div  class="w-100">
+   
+      <div class="block-title text-center mb-4"><h3>اختيارنا</h3></div>
+    </div>
+
+    <ng-container>
+      <ngx-slick-carousel *ngIf="embryoService.isDirectionRtl" class="carousel" [config]="rtlSlideConfig">
+        <div ngxSlickItem *ngFor="let product of newProductsSliderData.ourChoice;  let i=index">
+          <embryo-ProductCard [product]="product" 
+          (addToCart)="addToCart($event)" 
+          [currency]="embryoService.currency"  
+          [index]="i" type="new"></embryo-ProductCard>
+
+        </div>
+      </ngx-slick-carousel>
+    </ng-container>
+  </div>
 </div>
+
+
 <!-- <embryo-CTASingleBanner></embryo-CTASingleBanner> -->
 <div class="section-gap pt-0 shadow-disable" *ngIf="brands?.length > 0">
 <div class="container">

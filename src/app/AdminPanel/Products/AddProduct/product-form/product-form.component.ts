@@ -1,10 +1,9 @@
 import { UploadImagesComponent } from './../../../../Global/upload-images/upload-images.component';
 import { Component, Input, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder ,FormGroup,UntypedFormControl,UntypedFormGroup,ValidatorFn,Validators} from '@angular/forms';
+import { FormArray, FormBuilder ,FormGroup,UntypedFormControl,UntypedFormGroup,ValidationErrors,ValidatorFn,Validators} from '@angular/forms';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import Quill from 'quill';
-import { QuillTableModule } from 'quill-table';
 import 'quill/dist/quill.snow.css';
 import { map } from 'rxjs/operators';
 import { HttpRequestService } from 'src/app/Services/httpRequest/http-request.service';
@@ -49,6 +48,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
   productFeaturesList = [];
 	productDate: any;
 
+  specificationsArray;
+
 
 
   constructor(private cdr: ChangeDetectorRef, 
@@ -60,20 +61,22 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
         productName: ['',Validators.required],
         price: ['' ,Validators.required],
         oldPrice: [''],
-        shortDescription: [''],
+        search: ['',Validators.required],
+        quantityInInventory: ['',Validators.required],
+        productCode: [''],
         stock: [true],
         brand: ['' ],
         category: ['',Validators.required],
-        isMultipleColor: [false],
-        numberOfColor: [''],
+        hasMultipleColors: [false], 
         selectedImages:  [[]],
         hasMultipleStorage: [false], 
         storage: this.fb.array([]), 
         ourChoice: [false],
         newArrival: [false],
         bestSeller: [false],
-        isTable: [false],
         categoryFeatures: this.fb.array([]), 
+        colors: this.fb.array([]),
+        specifications: this.fb.array([]),
   });
 
 
@@ -91,6 +94,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
         this.colorsList = params.colorsObj.length > 0 ? JSON.parse(params.colorsObj) : [];
         this.productFeaturesList = params.productFeatures && params.productFeatures.length > 0 ? JSON.parse(params.productFeatures) : [];
         this.storageOptionsList = params.storageOptions && params.storageOptions.length > 0 ? JSON.parse(params.storageOptions) : [];
+        if(params.specifications){
+          this.specificationsArray = JSON.parse(params.specifications);
+        }
       }
     });
 
@@ -159,27 +165,35 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
             productName: [this.productDate.name,Validators.required],
             price: [this.productDate.price ,Validators.required],
             oldPrice: [this.productDate?.oldPrice],
-            shortDescription: [this.productDate?.shortDescription],
+            search: [this.productDate?.search,Validators.required],
+            quantityInInventory: [this.productDate?.quantityInInventory,Validators.required],
+            productCode: [this.productDate?.productCode],
             stock: [this.productDate.available == 'true' ? true : false],
             brand: [this.productDate?.brand],
             category: [this.productDate.categories,Validators.required],
-            isMultipleColor: this.productDate.isMultipleColor == 'true',
-            numberOfColor: [this.productDate?.numberOfColor],
+            hasMultipleColors: this.productDate?.hasMultipleColors == 'true', 
             descriptionType:this.fb.control('text'),
-            colors: this.productDate.colors.length > 0 ? this.fb.array(this.productDate.colors) : this.fb.array([]),
+            colors:  this.fb.array([]),
             selectedImages:  [[]],
             hasMultipleStorage: [false], 
             storage: this.fb.array([]),  
             ourChoice: [this.productDate.ourChoice == 'true'],
             newArrival: [this.productDate.newArrival == 'true'],
             bestSeller: [this.productDate.bestSeller == 'true'],
-            isTable: [this.productDate.table == 'true'],
-            categoryFeatures: this.fb.array([]), 
+            categoryFeatures: this.fb.array([]),
+            specifications: this.fb.array([]),
+
             
           });
     
           this.updateProductFeature(this.productFeaturesList);
-          this.updateStorage(this.storageOptionsList)
+          this.updateStorage(this.storageOptionsList);
+          this.updateColors(this.colorsList);
+
+          if(this.specificationsArray){
+            this.setSpecifications(this.specificationsArray);
+          }
+
         });
       
       }
@@ -209,18 +223,40 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
     return this.productForm.get('colors') as FormArray;
   }
 
-
-  addColors(){
-    if(parseInt(this.productForm.value.numberOfColor) < 50){
-        for(let i = 0; i< parseInt(this.productForm.value.numberOfColor) ; i++)
-          this.colors.push(this.fb.control('#000000'));
-    }
-    else if(parseInt(this.productForm.value.numberOfColor) < 0){
-      this.numberOfColor.setErrors({'incorrect': true});
-    }else{
-      this.numberOfColor.setErrors({'incorrect': true});
-    }
+  addColors() {
+    const colorGroup = this.fb.group({
+      colorId: [''], 
+      color: ['#000000', Validators.required],
+      colorAvailableInStock: [true]
+    });
+    this.colors.push(colorGroup);
   }
+
+  removeColor(index: number) {
+    this.colors.removeAt(index);
+  }
+
+  // addColors() {
+  //   const numberOfColors = parseInt(this.productForm.value.numberOfColor);
+  
+  //   if (numberOfColors > 0 && numberOfColors < 11) {
+  //     const colorsFormArray: FormGroup[] = [];
+  
+  //     for (let i = 0; i < numberOfColors; i++) {
+  //       const colorFormGroup = this.fb.group({
+  //         color: [ '#000000' ],
+  //         colorAvailableInStock: [ true ],
+  //       });
+  
+  //       colorsFormArray.push(colorFormGroup);
+  //     }
+  
+  //     this.productForm.setControl('colors', this.fb.array(colorsFormArray));
+  //   } else {
+  //     this.numberOfColor.setErrors({ 'incorrect': true });
+  //   }
+  // }
+  
 
   get numberOfColor(){
     return this.productForm.get('numberOfColor') as FormGroup
@@ -233,7 +269,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit {
 addStorage() {
     const storageGroup = this.fb.group({
         storageSize: ['', Validators.required],
-        additionalPrice: ['', Validators.required],
+        price: ['', Validators.required],
+        oldPrice:[''],
+        available:[true, Validators.required],
         id: ['']
     });
 
@@ -252,7 +290,9 @@ updateStorage(data) {
 
       const storageGroup = this.fb.group({
         storageSize: [item.storageSize, Validators.required],
-        additionalPrice: [item.additionalPrice, Validators.required],
+        price: [item.price, Validators.required],
+        oldPrice:[item.oldPrice],
+        available:[item.available, Validators.required],
         id: [item.id]
     });
 
@@ -260,6 +300,26 @@ updateStorage(data) {
     
   });
   this.productForm.get('hasMultipleStorage').setValue(true); 
+  this.cdr.detectChanges();
+  }
+}
+
+//for Update colors
+updateColors(data) {
+
+  if(data && data.length > 0){
+    data.forEach(item =>{
+      const colorFormGroup = this.fb.group({
+        colorId: [item.id],
+        color: [ item.color ],
+        colorAvailableInStock: [ item.available ],
+      });
+
+
+    this.colors.push(colorFormGroup);
+    
+  });
+  this.productForm.get('hasMultipleColors').setValue(true); 
   this.cdr.detectChanges();
   }
 }
@@ -322,12 +382,12 @@ updateStorage(data) {
       this.openSnackBar('Please fill the required fields ','error');
       return;
     }
-    if (this.productForm.get('isMultipleColor').value == null || this.productForm.get('isMultipleColor').value &&
-          (this.productForm.get('numberOfColor').value == null || this.productForm.get('numberOfColor').value == '' ||
-              this.productForm.get('numberOfColor').value == undefined)) {
-      this.openSnackBar('Please fill the required fields ','error');
-      return;
-    }
+    // if (this.productForm.get('hasMultipleColors').value == null || this.productForm.get('hasMultipleColors').value &&
+    //       (this.productForm.get('colors').value == null || this.productForm.get('colors').value == '' ||
+    //           this.productForm.get('colors').value == undefined)) {
+    //   this.openSnackBar('Please fill the required fields ','error');
+    //   return;
+    // }
 
 
     if((this.textDescription == null || this.textDescription.trim() == '') && this.productForm.value.descriptionType == 'text' ){
@@ -336,42 +396,94 @@ updateStorage(data) {
     }
 
     if (this.productForm.invalid) {
+      this.logValidationErrors(this.productForm);
       this.openSnackBar('Please Fill the fields','error');
       return;
     }
 
-
+    this.colorsList = [];
     for(let i = 0; i < this.colors?.length; i++){
-      if(this.colorsList && this.colorsList?.length > i){
-        this.colorsList[i].color = this.colors.value[i]
-      }else{
         this.colorsList.push({
-          id: "",
-          color: this.colors.value[i]
+          id: this.colors.value[i].colorId,
+          color: this.colors.value[i].color,
+          available: this.colors.value[i].colorAvailableInStock,
         })
       }
+
+
+      // to set the product out of stock in case color or storage are unavailable
+      if(this.productForm.value.stock){
+        let removeAvailable = true;
+
+        if(this.productForm.value.hasMultipleStorage && this.productForm.value.storage.length > 0){
+          this.productForm.value.storage.forEach(element => {
+            if(element.available == true){
+              removeAvailable = false;
+            }
+            
+          });
+          if(removeAvailable){
+            this.productForm.value.stock = false;
+          }
+        }
+
+        removeAvailable = true;
+        if(this.productForm.value.hasMultipleColors && this.colorsList.length > 0){
+          this.colorsList.forEach(element => {
+            if(element.available == true){
+              removeAvailable = false;
+            }
+            
+          });
+          if(removeAvailable){
+            this.productForm.value.stock = false;
+          }
+        }
+
+
       }
 
-      
+      //remove availabel from colors or storage in case the product not available
+      if(!this.productForm.value.stock){
+        if(this.productForm.value.hasMultipleStorage && this.productForm.value.storage.length > 0){
+          this.productForm.value.storage.forEach(element => {
+            if(element.available == true){
+              element.available = false;
+            }
+            
+          });
+        }
+        if(this.productForm.value.hasMultipleColors && this.colorsList.length > 0){
+          this.colorsList.forEach(element => {
+            if(element.available == true){
+              element.available = false;
+            }
+            
+          });
+        }
+      }
+
     const requestBody = {
       id: this.productDate && this.productDate.id ? this.productDate.id : '' ,
       productName: this.productForm.value.productName,
       price: this.productForm.value.price,
       oldPrice: this.productForm.value.oldPrice,
-      shortDescription: this.productForm.value.shortDescription,
+      search: this.productForm.value.search,
+      productCode: this.productForm.value.productCode,
+      quantityInInventory: this.productForm.value.quantityInInventory,
       stock: this.productForm.value.stock,
       brand: this.productForm.value.brand,
       category: this.productForm.value.category,
       textDescription: this.textDescription,
       productImages: this.selectedImages,
       deletedImages: this.deletedImagesList,
-      colors: this.productForm.get('isMultipleColor').value ? this.colorsList : [],
+      colors: this.productForm.get('hasMultipleColors').value ? this.colorsList : [],
       storageOptions: this.productForm.value.hasMultipleStorage ? this.productForm.value.storage : [],
       ourChoice: this.productForm.value.ourChoice,
       newArrival: this.productForm.value.newArrival,
       bestSeller: this.productForm.value.bestSeller,
-      checkTable: this.productForm.value.isTable,
       productFeatures: this.productForm.value.categoryFeatures,
+      specifications: this.productForm.value.specifications ? JSON.stringify(this.productForm.value.specifications) : '',
       };
 
     var payload = {
@@ -434,13 +546,13 @@ updateStorage(data) {
             productName: ['',Validators.required],
             price: ['' ,Validators.required],
             oldPrice: [''],
-            shortDescription: [''],
+            search: ['',Validators.required],
+            quantityInInventory: ['',Validators.required],
+            productCode: [''],
             stock: [true],
             brand: ['' ],
             category: ['',Validators.required],
-            isMultipleColor: [false],
-            numberOfColor: [''],
-            tableDescription:this.fb.array([]),
+            hasMultipleColors: [false], 
             colors: this.fb.array([]),
             selectedImages:  [[]],
             hasMultipleStorage: [false], // Add this line
@@ -448,8 +560,8 @@ updateStorage(data) {
             ourChoice: [false],
             newArrival: [false],
             bestSeller: [false],
-            isTable: [false],
-            categoryFeatures: this.fb.array([]), 
+            categoryFeatures: this.fb.array([]),
+            specifications: this.fb.array([]),
           });
   }
 
@@ -498,12 +610,80 @@ updateStorage(data) {
     }
     this.cdr.detectChanges();
   }
+
+
+  get specifications(): FormArray {
+    return this.productForm.get('specifications') as FormArray;
+  }
   
+  addSpecification() {
+    const specification = this.fb.group({
+      header: ['', Validators.required],
+      keyValuePairs: this.fb.array([this.createKeyValuePair()])
+    });
+    
+    this.specifications.push(specification);
+  }
   
+  createKeyValuePair(): FormGroup {
+    return this.fb.group({
+      key: ['', Validators.required],
+      value: ['', Validators.required]
+    });
+  }
+  
+  addKeyValuePair(specification: FormGroup) {
+    const keyValuePairs = specification.get('keyValuePairs') as FormArray;
+    keyValuePairs.push(this.createKeyValuePair());
+  }
+  
+  removeKeyValuePair(specification: FormGroup, index: number) {
+    const keyValuePairs = specification.get('keyValuePairs') as FormArray;
+    keyValuePairs.removeAt(index);
+  }
+  
+  removeSpecification(index: number) {
+    this.specifications.removeAt(index);
+  }
+
+  setSpecifications(specificationsData: any[]) {
+    const specificationsFormGroups = specificationsData.map(spec => {
+        return this.fb.group({
+            header: spec.header,
+            keyValuePairs: this.fb.array(spec.keyValuePairs.map(kv => {
+                return this.fb.group({
+                    key: kv.key,
+                    value: kv.value
+                });
+            }))
+        });
+    });
+
+    const newFormArray = this.fb.array(specificationsFormGroups);
+    this.productForm.setControl('specifications', newFormArray);
+}
+
 
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
+
+
+  logValidationErrors(group: FormGroup | FormArray): void {
+    Object.keys(group.controls).forEach((key: string) => {
+        const abstractControl = group.controls[key];
+        
+        if (abstractControl instanceof FormGroup || abstractControl instanceof FormArray) {
+            this.logValidationErrors(abstractControl);
+        } else {
+            if (abstractControl.errors) {
+                Object.keys(abstractControl.errors).forEach(errorKey => {
+                    console.log('Control: ', key, 'Error Type:', errorKey, 'Error Value:', abstractControl.errors[errorKey]);
+                });
+            }
+        }
+    });
+}
 }

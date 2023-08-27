@@ -84,7 +84,7 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
          data => {
             data.banners.sort((a, b) => a.priority - b.priority);
             data.banners.forEach(element => {
-               this.slides.push({img: element.imagePath})
+               this.slides.push({img: element.imagePath,textSearch : element.textSearch})
             });
            
          },
