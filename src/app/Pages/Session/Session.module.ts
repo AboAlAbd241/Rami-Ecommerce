@@ -36,6 +36,8 @@ import { RegisterComponent } from './Register/Register.component';
 import { SignInComponent } from './SignIn/SignIn.component';
 import { ForgotPasswordComponent } from './ForgotPassword/ForgotPassword.component';
 import { ThankYouComponent } from './ThankYou/ThankYou.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
    imports: [
@@ -68,7 +70,8 @@ import { ThankYouComponent } from './ThankYou/ThankYou.component';
       MatGridListModule,
       GlobalModule,
       TemplatesModule,
-      NgAisModule
+      NgAisModule,
+      ReactiveFormsModule
    ],
    declarations: [
       RegisterComponent,

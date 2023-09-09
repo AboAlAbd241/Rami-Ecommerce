@@ -19,6 +19,9 @@ export class ApiListService {
     getProductByTextSearch:"/get-product-by-name",
     getMainProducts:"/get-main-products",
     createAnOrder:"/create-order",
+    signUp:"/auth/sign-up",
+    logIn:"/auth/login",
+    forgetPassword:"/auth/forgot-password",
 
     // auth req 
     addProduct : "/admin/add-product",

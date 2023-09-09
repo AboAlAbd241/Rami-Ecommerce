@@ -8,6 +8,8 @@ import { HomeTwoComponent } from './Pages/Home/HomeTwo/HomeTwo.component';
 import { HomeThreeComponent } from './Pages/Home/HomeThree/HomeThree.component';
 import { CartComponent } from './Pages/Cart/Cart.component';
 import { NotFoundComponent } from './Pages/NotFound/NotFound.component';
+import { AuthGuardGuard } from './Services/authGuard/auth-guard.guard';
+import { CheckoutGuardGuard } from './Services/authGuard/checkout-guard.guard';
 
 export const AppRoutes : Routes = [
    {
@@ -45,11 +47,11 @@ export const AppRoutes : Routes = [
          },
          {
             path: 'session',loadChildren: ()=>
-            import('./Pages/Session/Session.module').then (m => m.SessionModule)
+            import('./Pages/Session/Session.module').then (m => m.SessionModule), canActivate:[AuthGuardGuard],
          },
          {
             path: 'checkout',loadChildren: ()=>
-            import('./Pages/Checkout/Checkout.module').then (m => m.CheckoutModule)
+            import('./Pages/Checkout/Checkout.module').then (m => m.CheckoutModule), canActivate: [CheckoutGuardGuard],
          },
          {
             path: '',loadChildren: ()=>

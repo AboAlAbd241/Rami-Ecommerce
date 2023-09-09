@@ -74,6 +74,7 @@ import { HomePageThreeSliderComponent } from './Slider/HomePageThreeSlider/HomeP
 import { NewProductsCardComponent } from './NewProductsCard/NewProductsCard.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { UploadImagesComponent } from './upload-images/upload-images.component';
+import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 
 
 @NgModule({
@@ -158,6 +159,7 @@ import { UploadImagesComponent } from './upload-images/upload-images.component';
         NewProductsCardComponent,
         LoginDialogComponent,
         UploadImagesComponent,
+        InfoDialogComponent,
     ],
     exports: [
         BrandslogoComponent,

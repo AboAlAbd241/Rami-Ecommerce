@@ -131,7 +131,7 @@ export class ShopDetailsComponent implements OnInit, OnChanges, AfterViewInit  {
       value.invoiceId =  Date.now().toString();
       
       this.embryoService.buyNow(value);
-      this.router.navigate(['/checkout/payment']);
+      this.router.navigate(['/checkout']);
    }
 
    changeMainImage(imagePath: string, index: number) {

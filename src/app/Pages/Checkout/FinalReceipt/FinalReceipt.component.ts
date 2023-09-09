@@ -19,7 +19,6 @@ export class FinalReceiptComponent implements OnInit {
       this.getDeliveryDate();
       this.userDetails = JSON.parse(localStorage.getItem("user"));
       this.product = JSON.parse(localStorage.getItem("byProductDetails"));
-      debugger
    }
 
    ngOnInit() {

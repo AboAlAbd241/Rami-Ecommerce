@@ -1,18 +1,32 @@
-<form>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
   <div class="mb-4">
     <mat-form-field class="w-100">
-      <input matInput type="email" placeholder="Email" required>
+      <input matInput type="email" placeholder="Email" formControlName="email" required>
+      <mat-error *ngIf="loginForm.controls.email.errors?.required">Email is required</mat-error>
+      <mat-error *ngIf="loginForm.controls.email.errors?.email">Invalid email format</mat-error>
     </mat-form-field>
   </div>
+
   <div class="mb-4">
     <mat-form-field class="w-100">
-      <input matInput type="password" placeholder="Password" required>
+      <input matInput type="password" placeholder="Password" formControlName="password" required>
+      <mat-error *ngIf="loginForm.controls.password.errors?.required">Password is required</mat-error>
+      <mat-error *ngIf="loginForm.controls.password.errors?.minlength">Password must be at least 8 characters</mat-error>
     </mat-form-field>
   </div>
+
   <div class="mb-3">
-    <mat-checkbox>Remember Me</mat-checkbox>
-    <span fxFlex></span> <a [routerLink]="['/session/forgot-password']">Forgot Password?</a>
+    <!-- <mat-checkbox>Remember Me</mat-checkbox> -->
+    <span fxFlex></span>
+    <a [routerLink]="['/session/forgot-password']">Forgot Password?</a>
   </div>
-  <button color="accent" class="button-lg mb-3" mat-raised-button [routerLink]="['/checkout/payment']">Sign In</button>
+
+  <button color="accent" class="button-lg mb-3" mat-raised-button [disabled]="loginForm.invalid">Sign In</button>
   <p>Don't have an account? <a [routerLink]="['/session/signup']">Click here to create one</a></p>
+
 </form>
+
+<div class="spinner-container" *ngIf="loading">
+  <mat-spinner class="custom-spinner"></mat-spinner>
+</div>

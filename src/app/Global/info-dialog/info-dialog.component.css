@@ -1,0 +1,36 @@
+.dialog-content {
+    display: flex;
+    /* align-items: center; */
+    justify-content: flex-start;
+    direction: ltr; /* Default to LTR, but this will change based on input */
+  }
+  
+  .error-icon {
+    color: #f44336; /* Red color for error */
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .error-text {
+    flex-grow: 1;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 500;
+  }
+  
+  .dialog-actions {
+    justify-content: flex-end;
+  }
+  
+  /* Adapt for RTL */
+  [dir="rtl"] .dialog-content {
+    direction: rtl;
+    justify-content: flex-end;
+  }
+  
+  [dir="rtl"] .error-icon {
+    margin-left: 10px;
+    margin-right: 0;
+  }
+  
+
+

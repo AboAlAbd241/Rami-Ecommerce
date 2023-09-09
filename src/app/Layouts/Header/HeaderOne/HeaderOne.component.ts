@@ -76,7 +76,7 @@ export class HeaderOneComponent implements OnInit {
    }
 
    public toggleSearch() {
-      // document.querySelector('app-main').classList.toggle('form-open');
+      document.querySelector('app-main').classList.toggle('form-open');
       this.isSearchVisible = !this.isSearchVisible;
       if(this.isSearchVisible) {
          // This is a small delay to focus on the input after it becomes visible.

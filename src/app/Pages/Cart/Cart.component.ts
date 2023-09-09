@@ -93,7 +93,7 @@ export class CartComponent implements OnInit, AfterViewChecked {
 
 	public updateLocalCartProduct() {
 		this.embryoService.updateAllLocalCartProduct(this.embryoService.localStorageCartProducts);
-		this.router.navigate(['/checkout/payment'])
+		this.router.navigate(['/checkout'])
 	}
 
 	public getQuantityValue(product) {

@@ -196,3 +196,24 @@
   align-items: center;
   justify-content: center;
 }
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0 16px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: space-around;
+}
+
+.header-v1-bottom-inner{
+  width: 40%;
+}
+
+@media(max-width:800px) {
+  .header-v1-bottom-inner {
+    width: 70%;
+  }
+}
